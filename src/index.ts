@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import { connectDB } from "./db/connection";
 
 const app = express();
 
@@ -16,6 +17,8 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Express + TypeScript Server");
 });
+
+connectDB();
 
 app.listen("3000", () => {
   console.log(`⚡️[server]: Server is running at http://localhost:3000`);
