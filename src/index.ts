@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { connectDB } from "./db/connection";
+import { router } from "./routes/router";
 
 const app = express();
 
@@ -19,6 +20,9 @@ app.get("/", (req, res) => {
 });
 
 connectDB();
+
+// Routes
+app.use("/api", router);
 
 app.listen("3000", () => {
   console.log(`⚡️[server]: Server is running at http://localhost:3000`);

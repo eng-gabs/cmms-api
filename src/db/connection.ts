@@ -6,7 +6,7 @@ async function main() {
     await mongoose.connect(
       "mongodb+srv://gmduarte96:SdCMvjNnQPl8jBfy@cluster0.rejc6oo.mongodb.net/?retryWrites=true&w=majority"
     );
-    console.log("Coneccted");
+    console.log("MongoDB Conected");
   } catch (error) {}
 }
 
