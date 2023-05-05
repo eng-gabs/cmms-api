@@ -1,0 +1,14 @@
+{
+  "name": "cmms-api",
+  "version": "1.0.0",
+  "description": "BackEnd API for Tractian Challenge",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Gabriel Martins Duarte",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.0.4"
+  }
+}
