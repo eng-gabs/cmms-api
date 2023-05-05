@@ -4,11 +4,22 @@
   "description": "BackEnd API for Tractian Challenge",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "build": "npx tsc",
+    "start": "node dist/index.js",
+    "dev": "npx tsc --watch & nodemon -q dist/index.js"
   },
   "author": "Gabriel Martins Duarte",
   "license": "ISC",
   "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "^20.0.0",
+    "nodemon": "^2.0.22",
     "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "mongoose": "^7.1.0"
   }
 }
