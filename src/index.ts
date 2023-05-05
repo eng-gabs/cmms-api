@@ -3,6 +3,7 @@ import cors from "cors";
 import { connectDB } from "./db/connection";
 import { router } from "./routes/router";
 
+const PORT = process.env.PORT || 3000;
 const app = express();
 
 // Add a list of allowed origins.
@@ -24,6 +25,6 @@ connectDB();
 // Routes
 app.use("/api", router);
 
-app.listen("3000", () => {
-  console.log(`⚡️[server]: Server is running at http://localhost:3000`);
+app.listen(PORT, () => {
+  console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
 });
