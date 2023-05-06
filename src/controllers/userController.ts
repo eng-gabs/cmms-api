@@ -2,6 +2,34 @@ import { Request, Response } from "express";
 import { UserModel } from "../models/user";
 
 export const userController = {
+  getById: async (req: Request, res: Response) => {
+    try {
+      const id = req.params.id;
+      const data = await UserModel.findById(id);
+      res.status(200).json({ data });
+    } catch (err) {}
+  },
+  updateById: async (req: Request, res: Response) => {
+    try {
+      const id = req.params.id;
+      const user = await UserModel.findById(id);
+      const newData = {
+        name: req.body.name,
+        email: req.body.email,
+      };
+      const data = await UserModel.findByIdAndUpdate(id, newData, {
+        new: true,
+      });
+      res.status(200).json({ data });
+    } catch (err) {}
+  },
+  deleteById: async (req: Request, res: Response) => {
+    try {
+      const id = req.params.id;
+      const data = await UserModel.findByIdAndDelete(id);
+      res.status(200).json({ data, msg: "Data deleted" });
+    } catch (err) {}
+  },
   getAll: async (req: Request, res: Response) => {
     try {
       const data = await UserModel.find();
@@ -11,8 +39,8 @@ export const userController = {
   create: async (req: Request, res: Response) => {
     try {
       const data = await UserModel.create({
-        name: "Gabs",
-        email: "teste@teste.com",
+        name: req.body.name,
+        email: req.body.email,
       });
       res.status(200).json({ data });
     } catch (err) {}

@@ -21,6 +21,8 @@ describe("User Test Suite", () => {
   });
   it("second", async () => {
     const result = await chai.request(app).get("/api/user/create");
-    chai.expect(result.body.data).to.equal({ email: "teste@teste.com" });
+    return chai
+      .expect(result.body.data)
+      .to.equal({ email: "teste@teste.com", name: "Gabs" });
   });
 });
