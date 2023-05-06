@@ -4,17 +4,17 @@ import { UserModel } from "../models/user";
 export const userController = {
   getAll: async (req: Request, res: Response) => {
     try {
-      const response = await UserModel.find();
-      res.status(200).json({ response });
+      const data = await UserModel.find();
+      res.status(200).json({ data });
     } catch (err) {}
   },
   create: async (req: Request, res: Response) => {
     try {
-      const response = await UserModel.create({
+      const data = await UserModel.create({
         name: "Gabs",
         email: "teste@teste.com",
       });
-      res.status(200).json({ response });
+      res.status(200).json({ data });
     } catch (err) {}
   },
 };

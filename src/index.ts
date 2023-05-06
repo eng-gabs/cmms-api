@@ -11,7 +11,7 @@ config({
 console.log("process", process.env.NODE_ENV!);
 
 const PORT = process.env.PORT || 3000;
-const app = express();
+export const app = express();
 
 // Add a list of allowed origins.
 const allowedOrigins = ["http://localhost:3000"];
@@ -27,7 +27,9 @@ app.get("/", (req, res) => {
   res.send("Express + TypeScript Server");
 });
 
-connectDB();
+if (process.env.NODE_ENV !== "test") {
+  connectDB();
+}
 
 // Routes
 app.use("/api", router);
