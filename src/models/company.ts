@@ -11,6 +11,13 @@ const companySchema = new Schema(
       ref: "User",
       required: true,
     },
+    units: [
+      {
+        type: SchemaTypes.ObjectId,
+        ref: "Unit",
+        required: false,
+      },
+    ],
   },
   { timestamps: true }
 );

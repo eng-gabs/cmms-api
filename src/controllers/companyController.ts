@@ -5,27 +5,36 @@ import { userController } from "./userController";
 export const companyController = {
   create: async (req: Request, res: Response) => {
     try {
-      const data = await CompanyModel.create({
-        name: req.body.name,
-        users: req.body.users,
+      const { name, users } = req.body;
+      const company = new CompanyModel({
+        name,
+        users,
       });
-      userController.updateUserCompany(req.body.users, data._id.toString());
-      res.status(201).json({ data });
-    } catch (err) {}
+      const companyCreated = await userController
+        .updateUserCompany(users, company.id)
+        .then(() => company.save());
+      return res.status(201).json({ data: companyCreated });
+    } catch (err) {
+      return res.status(500).json({ message: err });
+    }
   },
 
   getById: async (req: Request, res: Response) => {
     try {
       const id = req.params.id;
       const data = await CompanyModel.findById(id).populate("users");
-      res.status(200).json({ data });
-    } catch (err) {}
+      return res.status(200).json({ data });
+    } catch (err) {
+      return res.status(500).json({ message: err });
+    }
   },
   getAll: async (req: Request, res: Response) => {
     try {
       const data = await CompanyModel.find().populate("users");
-      res.status(200).json({ data });
-    } catch (err) {}
+      return res.status(200).json({ data });
+    } catch (err) {
+      return res.status(500).json({ message: err });
+    }
   },
   addUser: async (companyId: string, userId: string) => {
     await CompanyModel.findByIdAndUpdate(companyId, {
