@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, SchemaTypes, model } from "mongoose";
 
 const userSchema = new Schema(
   {
@@ -9,6 +9,11 @@ const userSchema = new Schema(
     email: {
       type: String,
       required: true,
+    },
+    company: {
+      type: SchemaTypes.ObjectId,
+      ref: "Company",
+      required: false,
     },
   },
   { timestamps: true }

@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
 import { UserModel } from "../models/user";
+import { companyController } from "./companyController";
 
 export const userController = {
   getById: async (req: Request, res: Response) => {
     try {
       const id = req.params.id;
-      const data = await UserModel.findById(id);
+      const data = await UserModel.findById(id).populate("company");
       res.status(200).json({ data });
     } catch (err) {}
   },
@@ -38,11 +39,19 @@ export const userController = {
   },
   create: async (req: Request, res: Response) => {
     try {
+      const companyId: string | undefined = req.body.company;
       const data = await UserModel.create({
         name: req.body.name,
         email: req.body.email,
+        company: companyId,
       });
+      if (companyId) {
+        companyController.addUser(companyId, data._id.toString());
+      }
       res.status(200).json({ data });
     } catch (err) {}
+  },
+  updateUserCompany: async (users: string[], companyId: string) => {
+    await UserModel.updateMany({ _id: { $in: users } }, { company: companyId });
   },
 };
