@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { unitController } from "../controllers/unitController";
+import { assetControler } from "../controllers/assetControler";
 export const unitRouter = Router();
 
 unitRouter.route("/").post((req, res) => {
@@ -20,4 +21,12 @@ unitRouter.route("/:id").put((req, res) => {
 
 unitRouter.route("/:id").delete((req, res) => {
   unitController.delete(req, res);
+});
+
+unitRouter.route("/:id/asset").post((req, res) => {
+  assetControler.create(req, res);
+});
+
+unitRouter.route("/:id/asset/:assetId").get((req, res) => {
+  assetControler.get(req, res);
 });

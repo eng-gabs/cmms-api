@@ -1,6 +1,6 @@
 import { Schema, SchemaTypes, model } from "mongoose";
 
-enum AssetStatus {
+export enum AssetStatus {
   RUNNING = "Running",
   ALERTING = "Alerting",
   STOPPED = "Stopped",
