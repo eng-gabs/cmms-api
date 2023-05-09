@@ -1,31 +1,29 @@
 import { User } from "../models/user";
 import { UserDAO } from "../db/userDAO";
+import { Err, Result } from "../utils/error";
 
-interface Error {
-  message: string;
-  status: number; // http status code
-}
-
-interface Result<DataType extends Object | null, Err extends Error> {
-  data?: DataType;
-  error?: Err;
-}
-
-const UserNotFound: (id: string) => Error = (id) => {
+const UserNotFound: (id: string) => Err = (id) => {
   return {
     message: `Usuário com id ${id} não encontrado`,
     status: 404,
   };
 };
 
-type UserErrors = ReturnType<typeof UserNotFound>;
+const EmailAlreadyRegisteredError: Err = {
+  message: "E-mail inválido",
+  status: 422,
+};
+
+type UserErrors =
+  | ReturnType<typeof UserNotFound>
+  | typeof EmailAlreadyRegisteredError;
 
 type UserResult = Result<User, UserErrors>;
 
 interface IUserService {
   userDAO: typeof UserDAO;
 
-  create: (data: User) => Promise<User>;
+  create: (data: User) => Promise<UserResult>;
   read: (id: string) => Promise<UserResult>;
   update: (id: string, data: User) => Promise<UserResult>;
   delete: (id: string) => Promise<UserResult>;
@@ -48,10 +46,11 @@ class UserServiceSingleton implements IUserService {
     const { email } = data;
     const emailAlreadyRegistered = !!(await this.userDAO.findByEmail(email));
     if (emailAlreadyRegistered) {
-      throw Error(`E-mail '${email}' already registered`);
+      return { error: EmailAlreadyRegisteredError };
     }
     // TODO: intercept auth - company user
-    return await this.userDAO.create(data);
+    const userCreated = await this.userDAO.create(data);
+    return { data: userCreated };
   }
   async read(id: string) {
     // TODO: intercept auth - owner

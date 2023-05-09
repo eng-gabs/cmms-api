@@ -4,7 +4,7 @@ import { User, UserModel } from "../models/user";
 interface IUserDAO {
   userModel: Model<User>;
 
-  create: (data: User) => Promise<User> | null;
+  create: (data: User) => Promise<User | null>;
   read: (id: string) => Promise<User | null>;
   update: (id: string, data: User) => Promise<User | null>;
   delete: (id: string) => Promise<User | null>;

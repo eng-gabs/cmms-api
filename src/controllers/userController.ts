@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { User, UserModel } from "../models/user";
 import { companyController } from "./companyController";
 import { UserService } from "../services/userService";
+import { sendErrorMessage } from "../utils/error";
 
 interface Controller<T> {
   [key: string]: (
@@ -16,7 +17,7 @@ export const userController: Controller<User> = {
       const id = req.params.id;
       const { data, error } = await UserService.read(id);
       if (error) {
-        return res.status(error.status).json({ message: error.message });
+        return sendErrorMessage(error, res);
       } else {
         return res.status(200).json({ data });
       }
