@@ -1,6 +1,13 @@
-import { Schema, SchemaTypes, model } from "mongoose";
+import { Schema, SchemaTypes, model, Document, Model } from "mongoose";
 
-const userSchema = new Schema(
+// Interface for documents,
+export interface User extends Document {
+  name: string;
+  email: string;
+  company?: string;
+}
+
+const userSchema: Schema<User> = new Schema(
   {
     name: {
       type: String,
@@ -19,4 +26,9 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
-export const UserModel = model("User", userSchema);
+// Interface for collections strong typing to IUser
+interface UserModel extends Model<User> {
+  save(user: string): string;
+}
+
+export const UserModel = model<User, UserModel>("User", userSchema);
