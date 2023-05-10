@@ -3,6 +3,14 @@ import { assetControler } from "../controllers/assetControler";
 
 export const assetRouter = Router();
 
+assetRouter.route("/").post((req, res) => {
+  assetControler.create(req, res);
+});
+
+assetRouter.route("/:id").get((req, res) => {
+  assetControler.get(req, res);
+});
+
 assetRouter.route("/:id").delete((req, res) => {
   assetControler.delete(req, res);
 });

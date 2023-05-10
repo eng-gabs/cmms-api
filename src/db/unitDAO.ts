@@ -1,4 +1,4 @@
-import { Model } from "mongoose";
+import { Model, ObjectId } from "mongoose";
 import { Unit, UnitModel } from "../models/unit";
 import { UserDAO } from "./userDAO";
 import { User } from "../models/user";
@@ -64,6 +64,13 @@ export class UnitDAOSingleton implements IUnitDAO {
   async getUnitWithObjects(id: string) {
     const unit = await this.read(id);
     return unit?.populate("company assets") ?? null;
+  }
+
+  async pushAsset(id: string, assetId: ObjectId) {
+    const unit = await this.read(id);
+    if (!unit) return null;
+    unit.assets.push(assetId);
+    return await unit.save();
   }
 }
 

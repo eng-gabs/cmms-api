@@ -37,7 +37,6 @@ describe("Unit Test Suite", () => {
   before(async () => {
     await connectDB();
     await clearDatabase();
-    new CompanyForTesting().create();
   });
   after(async () => {
     await clearDatabase();

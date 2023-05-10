@@ -1,4 +1,4 @@
-import { Schema, SchemaTypes, model } from "mongoose";
+import { ObjectId, Schema, SchemaTypes, model } from "mongoose";
 
 export enum AssetStatus {
   RUNNING = "Running",
@@ -6,7 +6,18 @@ export enum AssetStatus {
   STOPPED = "Stopped",
 }
 
-const assetSchema = new Schema({
+export interface Asset {
+  name: string;
+  description: string;
+  image: string;
+  model: string;
+  owner: string;
+  status: AssetStatus;
+  healthLevel: number;
+  unit: ObjectId;
+}
+
+const assetSchema = new Schema<Asset>({
   name: {
     type: String,
     required: true,
