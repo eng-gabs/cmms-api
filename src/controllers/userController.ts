@@ -8,7 +8,7 @@ import {
   sendErrorMessage,
 } from "../utils/error";
 
-interface Controller<T> {
+export interface Controller<T> {
   [key: string]: (
     req: Request,
     res: Response

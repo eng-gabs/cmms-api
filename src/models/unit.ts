@@ -1,6 +1,12 @@
-import { Schema, SchemaTypes, model } from "mongoose";
+import { ObjectId, Schema, SchemaTypes, model } from "mongoose";
 
-const unitSchema = new Schema(
+export interface Unit {
+  name: string;
+  company: ObjectId;
+  assets: ObjectId[];
+}
+
+const unitSchema = new Schema<Unit>(
   {
     company: {
       type: SchemaTypes.ObjectId,

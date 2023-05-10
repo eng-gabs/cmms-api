@@ -1,9 +1,10 @@
 import { Router } from "express";
 import { unitController } from "../controllers/unitController";
 import { assetControler } from "../controllers/assetControler";
+import { Unit } from "../models/unit";
 export const unitRouter = Router();
 
-unitRouter.route("/").post((req, res) => {
+unitRouter.route("/").post<{}, Unit, Unit>((req, res) => {
   unitController.create(req, res);
 });
 
@@ -15,7 +16,7 @@ unitRouter.route("/:id").get((req, res) => {
   unitController.get(req, res);
 });
 
-unitRouter.route("/:id").put((req, res) => {
+unitRouter.route("/:id").patch((req, res) => {
   unitController.update(req, res);
 });
 

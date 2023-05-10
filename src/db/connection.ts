@@ -1,4 +1,4 @@
-import mongoose, { connect, set } from "mongoose";
+import mongoose, { connect, connection, set } from "mongoose";
 
 async function main() {
   try {
@@ -13,3 +13,5 @@ async function main() {
 }
 
 export const connectDB = main;
+
+export const disconnectDB = () => connection.close();

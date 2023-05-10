@@ -1,7 +1,8 @@
-import { Model } from "mongoose";
+import { Model, ObjectId, Document } from "mongoose";
 import { Company, CompanyModel } from "../models/company";
 import { UserDAO } from "./userDAO";
 import { User } from "../models/user";
+import { Unit } from "../models/unit";
 
 interface ICompanyDAO {
   companyModel: Model<Company>;
@@ -36,7 +37,7 @@ export class CompanyDAOSingleton implements ICompanyDAO {
     return companyModel;
   }
 
-  async getCompanyPopulated(id: string) {
+  async getCompanyWithObjects(id: string) {
     const companyModel = await this.companyModel
       .findById(id)
       .populate("users units");
@@ -91,6 +92,13 @@ export class CompanyDAOSingleton implements ICompanyDAO {
       { new: true }
     );
     return updatedCompany;
+  }
+
+  async pushUnit(id: string, unitId: ObjectId) {
+    const company = await this.read(id);
+    if (!company) return null;
+    company.units.push(unitId);
+    return await company.save();
   }
 }
 

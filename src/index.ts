@@ -8,8 +8,6 @@ config({
   path: process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : ".env",
 });
 
-console.log("process", process.env.NODE_ENV!);
-
 const PORT = process.env.PORT || 3000;
 export const app = express();
 
