@@ -43,18 +43,19 @@ export class UserDAOSingleton implements IUserDAO {
   }
 
   async update(id: string, newData: Partial<User>) {
-    const userModel = await this.read(id);
-    if (!userModel) return null;
+    const user = await this.read(id);
+    if (!user) return null;
     // if user is linking a company, link user in company collection (apenas para user - update deve ser unidirecional)
     if (newData.company) {
-      await CompanyDAO.addCompanyUser(newData.company.toString(), userModel);
+      await CompanyDAO.addCompanyUser(newData.company.toString(), user);
       // if user had already a company, remove from old one
-      if (userModel.company && userModel.company !== newData.company) {
-        await CompanyDAO.removeCompanyUser(userModel.company.toString(), id);
+      if (user.company && user.company !== newData.company) {
+        await CompanyDAO.removeCompanyUser(user.company.toString(), id);
       }
     }
-    await userModel.updateOne(newData, { new: true });
-    return await userModel.save();
+    return await this.userModel.findByIdAndUpdate(id, newData, {
+      new: true,
+    });
   }
   async delete(id: string) {
     const userModel = await this.read(id);
