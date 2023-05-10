@@ -1,12 +1,12 @@
-import { Document, Schema, SchemaTypes, model } from "mongoose";
+import { Document, ObjectId, Schema, SchemaTypes, model } from "mongoose";
 
 export interface Company extends Document {
   name: string;
-  users: string[];
-  units: string[];
+  users: ObjectId[];
+  units: ObjectId[];
 }
 
-const companySchema = new Schema(
+const companySchema = new Schema<Company>(
   {
     name: {
       type: String,

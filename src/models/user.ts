@@ -1,10 +1,17 @@
-import { Schema, SchemaTypes, model, Document, Model } from "mongoose";
+import {
+  Schema,
+  SchemaTypes,
+  model,
+  Document,
+  Model,
+  ObjectId,
+} from "mongoose";
 
 // Interface for documents,
 export interface User extends Document {
   name: string;
   email: string;
-  company?: string;
+  company?: ObjectId;
 }
 
 const userSchema: Schema<User> = new Schema(

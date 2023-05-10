@@ -1,12 +1,13 @@
 import { Model } from "mongoose";
 import { User, UserModel } from "../models/user";
+import { Company } from "../models/company";
 
 interface IUserDAO {
   userModel: Model<User>;
 
   create: (data: User) => Promise<User | null>;
   read: (id: string) => Promise<User | null>;
-  update: (id: string, data: User) => Promise<User | null>;
+  update: (id: string, data: Partial<User>) => Promise<User | null>;
   delete: (id: string) => Promise<User | null>;
 
   get: (id: string) => Promise<User | null>; // User with Company
@@ -26,9 +27,10 @@ export class UserDAOSingleton implements IUserDAO {
     return UserDAOSingleton.instance;
   }
   async create(data: User) {
-    const userCreated = await this.userModel.create(data);
+    const createdUser = new this.userModel(data);
+    // const userCreated = await this.userModel.create(data);
     // const updateCompany TODO: update company via CompanyDAO
-    return userCreated;
+    return await createdUser.save();
   }
   async read(id: string) {
     const userModel = await this.userModel.findById(id);
@@ -39,7 +41,7 @@ export class UserDAOSingleton implements IUserDAO {
     return userModel;
   }
 
-  async update(id: string, newData: User) {
+  async update(id: string, newData: Partial<User>) {
     const userModel = await this.read(id);
     // const updateCompany TODO: update company via CompanyDAO
     if (!userModel) return null;
@@ -64,6 +66,17 @@ export class UserDAOSingleton implements IUserDAO {
   }
 
   // Update User Company DAO Method
+
+  async addCompany(id: string, company: Company) {
+    return await this.update(id, { company: company.id });
+  }
+
+  async removeCompany(id: string) {
+    const user = await this.read(id);
+    if (!user) return null;
+    user.company = undefined; // or user.update({ _id: id }, { $unset: { company: 1 }}
+    return await user.save();
+  }
 }
 
 export const UserDAO = UserDAOSingleton.getInstance();
