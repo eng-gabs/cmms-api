@@ -4,6 +4,7 @@ import { app } from "../..";
 import { connectDB } from "../../db/connection";
 import { connection } from "mongoose";
 import { CompanyModel } from "../../models/company";
+import { UserModel } from "../../models/user";
 chai.use(chaiHttp);
 
 describe("Company Test Suite", () => {
@@ -22,6 +23,18 @@ describe("Company Test Suite", () => {
       .send({ name: "Test Company" });
     return chai.expect(result.body.data).to.contain({ name: "Test Company" });
   });
+  it("Create Company with Users: POST /api/company", async () => {
+    const user = await UserModel.create({
+      name: "user",
+      email: "user@user.com",
+    });
+    const result = await chai
+      .request(app)
+      .post("/api/company")
+      .send({ name: "Test Company", users: [user.id] });
+    chai.expect(result.body.data).to.contain({ name: "Test Company" });
+    chai.expect(result.body.data.users).to.contain(user.id);
+  });
   it("Fetch Company: GET /api/company/:id", async () => {
     const company = await CompanyModel.create({
       name: "CompanyToFetch",
@@ -31,13 +44,13 @@ describe("Company Test Suite", () => {
       name: "CompanyToFetch",
     });
   });
-  it("Update Company: PUT /api/company/:id", async () => {
+  it("Update Company: PATCH /api/company/:id", async () => {
     const company = await CompanyModel.create({
       name: "CompanyToUpdate",
     });
     const result = await chai
       .request(app)
-      .put(`/api/company/${company.id}`)
+      .patch(`/api/company/${company.id}`)
       .send({ name: "CompanyUpdated" });
     return chai.expect(result.body.data).to.contain({
       name: "CompanyUpdated",

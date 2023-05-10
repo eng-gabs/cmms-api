@@ -14,7 +14,7 @@ const EmailAlreadyRegisteredError: Err = {
   status: 422,
 };
 
-type UserErrors =
+export type UserErrors =
   | ReturnType<typeof UserNotFound>
   | typeof EmailAlreadyRegisteredError;
 

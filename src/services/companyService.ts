@@ -47,7 +47,7 @@ class CompanyServiceSingleton implements ICompanyService {
   }
   async read(id: string) {
     // TODO: intercept auth - owner
-    const company = await this.companyDAO.read(id);
+    const company = await this.companyDAO.getCompanyPopulated(id);
     if (!company) return { error: CompanyNotFound(id) };
     return { data: company };
   }

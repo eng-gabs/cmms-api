@@ -36,6 +36,16 @@ export class CompanyDAOSingleton implements ICompanyDAO {
     return companyModel;
   }
 
+  async getCompanyPopulated(id: string) {
+    const companyModel = await this.companyModel
+      .findById(id)
+      .populate("users units");
+    if (!companyModel) {
+      return null;
+    }
+    return companyModel;
+  }
+
   // Not possible to update users and units using this method: use push and pull methods instead
   /* 
   Dois casos de uso: 
@@ -48,7 +58,9 @@ export class CompanyDAOSingleton implements ICompanyDAO {
     const companyModel = await this.read(id);
     // const updateCompany TODO: update company via CompanyDAO
     if (!companyModel) return null;
-    return await companyModel.updateOne(newData, { new: true });
+    return await this.companyModel.findByIdAndUpdate(id, newData, {
+      new: true,
+    });
   }
   async delete(id: string) {
     const companyModel = await this.read(id);

@@ -1,8 +1,12 @@
 import { Request, Response } from "express";
 import { User, UserModel } from "../models/user";
 import { companyController } from "./companyController";
-import { UserService } from "../services/userService";
-import { sendErrorMessage } from "../utils/error";
+import { UserErrors, UserService } from "../services/userService";
+import {
+  Err,
+  processRequestAndResponseWrapper,
+  sendErrorMessage,
+} from "../utils/error";
 
 interface Controller<T> {
   [key: string]: (
@@ -12,18 +16,27 @@ interface Controller<T> {
 }
 
 export const userController: Controller<User> = {
-  getById: async (req: Request, res: Response) => {
-    try {
-      const id = req.params.id;
-      const { data, error } = await UserService.read(id);
-      if (error) {
-        return sendErrorMessage(error, res);
-      } else {
-        return res.status(200).json({ data });
-      }
-    } catch (err) {
-      return res.status(500).json({ message: err });
-    }
+  getById: async (req, res) => {
+    return await processRequestAndResponseWrapper(
+      async (req, res) => {
+        const id = req.params.id;
+        return await UserService.read(id);
+      },
+      req,
+      res
+    );
+
+    // try {
+    //   const id = req.params.id;
+    //   const { data, error } = await UserService.read(id);
+    //   if (error) {
+    //     return sendErrorMessage(error, res);
+    //   } else {
+    //     return res.status(200).json({ data });
+    //   }
+    // } catch (err) {
+    //   return res.status(500).json({ message: err });
+    // }
   },
   updateById: async (req: Request, res: Response) => {
     try {
