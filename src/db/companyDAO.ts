@@ -1,6 +1,7 @@
 import { Model } from "mongoose";
 import { Company, CompanyModel } from "../models/company";
 import { UserDAO } from "./userDAO";
+import { User } from "../models/user";
 
 interface ICompanyDAO {
   companyModel: Model<Company>;
@@ -28,8 +29,6 @@ export class CompanyDAOSingleton implements ICompanyDAO {
   }
   async create(data: Company) {
     const createdCompany = new this.companyModel(data);
-    // const companyCreated = await this.companyModel.create(data);
-    // const updateCompany TODO: update company via CompanyDAO
     return await createdCompany.save();
   }
   async read(id: string) {
@@ -41,6 +40,13 @@ export class CompanyDAOSingleton implements ICompanyDAO {
   }
 
   // Not possible to update users and units using this method: use push and pull methods instead
+  /* 
+  Dois casos de uso: 
+    1. usuário quer atualizar toda a company com uma lista de usuarios
+    2. usuario quer adicionar ou remover um usuario dessa lista
+
+    a nivel de dao é necessario implementar os dois casos por conta de performance?
+  */
   async update(id: string, newData: Omit<Company, "users" | "units">) {
     const companyModel = await this.read(id);
     // const updateCompany TODO: update company via CompanyDAO
@@ -55,25 +61,20 @@ export class CompanyDAOSingleton implements ICompanyDAO {
       .then(() => companyModel);
     return deletedModel;
   }
-  async addCompanyUser(id: string, userId: string) {
+  // TODO: remover gambiarra -> update 1:n em uma única direção: não é possível adicionar uma company pelo user, apenas por company (push e pull)
+  // TODO: UNIT DAO VAI SEGUIR ESSA LOGICA!
+  async addCompanyUser(id: string, user: User, updateUser?: boolean) {
     const companyModel = await this.read(id);
-    // const updateCompany TODO: update company via CompanyDAO
     if (!companyModel) return null;
-    const updatedUser = await UserDAO.addCompany(userId, companyModel.id);
-    const updatedCompany = await companyModel.updateOne(
-      {
-        $push: { users: userId },
-      },
-      { new: true }
-    );
-    return updatedCompany;
+    if (updateUser) await UserDAO.addCompany(user.id, companyModel.id);
+    companyModel.users.push(user.id);
+    return await companyModel.save();
   }
 
-  async removeCompanyUser(id: string, userId: string) {
+  async removeCompanyUser(id: string, userId: string, updateUser?: boolean) {
     const companyModel = await this.read(id);
-    // const updateCompany TODO: update company via CompanyDAO
     if (!companyModel) return null;
-    const updatedUser = await UserDAO.removeCompany(userId);
+    if (updateUser) await UserDAO.removeCompany(userId);
     const updatedCompany = await companyModel.updateOne(
       {
         $pull: { users: userId },
@@ -82,8 +83,6 @@ export class CompanyDAOSingleton implements ICompanyDAO {
     );
     return updatedCompany;
   }
-
-  // Update Company User DAO Method
 }
 
 export const CompanyDAO = CompanyDAOSingleton.getInstance();

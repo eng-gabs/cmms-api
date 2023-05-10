@@ -25,7 +25,7 @@ interface IUserService {
 
   create: (data: User) => Promise<UserResult>;
   read: (id: string) => Promise<UserResult>;
-  update: (id: string, data: User) => Promise<UserResult>;
+  update: (id: string, data: Partial<User>) => Promise<UserResult>;
   delete: (id: string) => Promise<UserResult>;
 }
 
@@ -58,7 +58,7 @@ class UserServiceSingleton implements IUserService {
     if (!user) return { error: UserNotFound(id) };
     return { data: user };
   }
-  async update(id: string, data: User) {
+  async update(id: string, data: Partial<User>) {
     // TODO: intercept auth - owner
     const user = await this.userDAO.update(id, data);
     if (!user) return { error: UserNotFound(id) };

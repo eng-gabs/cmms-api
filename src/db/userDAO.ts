@@ -1,6 +1,7 @@
 import { Model } from "mongoose";
 import { User, UserModel } from "../models/user";
 import { Company } from "../models/company";
+import { CompanyDAO } from "./companyDAO";
 
 interface IUserDAO {
   userModel: Model<User>;
@@ -43,9 +44,17 @@ export class UserDAOSingleton implements IUserDAO {
 
   async update(id: string, newData: Partial<User>) {
     const userModel = await this.read(id);
-    // const updateCompany TODO: update company via CompanyDAO
     if (!userModel) return null;
-    return await userModel.updateOne(newData);
+    // if user is linking a company, link user in company collection (apenas para user - update deve ser unidirecional)
+    if (newData.company) {
+      await CompanyDAO.addCompanyUser(newData.company.toString(), userModel);
+      // if user had already a company, remove from old one
+      if (userModel.company && userModel.company !== newData.company) {
+        await CompanyDAO.removeCompanyUser(userModel.company.toString(), id);
+      }
+    }
+    await userModel.updateOne(newData, { new: true });
+    return await userModel.save();
   }
   async delete(id: string) {
     const userModel = await this.read(id);
@@ -68,7 +77,10 @@ export class UserDAOSingleton implements IUserDAO {
   // Update User Company DAO Method
 
   async addCompany(id: string, company: Company) {
-    return await this.update(id, { company: company.id });
+    const user = await this.read(id);
+    if (!user) return null;
+    user.company = company.id;
+    return await user.save();
   }
 
   async removeCompany(id: string) {
