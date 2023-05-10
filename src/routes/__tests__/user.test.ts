@@ -53,6 +53,7 @@ describe("User Test Suite", () => {
       email: "userToUpdate@test.com",
     });
   });
+  // TODO: update user with company
   it("Delete User: DELETE /api/user/:id", async () => {
     const user = await UserModel.create({
       name: "UserToDelete",

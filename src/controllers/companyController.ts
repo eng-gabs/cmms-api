@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { CompanyModel } from "../models/company";
 import { userController } from "./userController";
+import { CompanyService } from "../services/companyService";
 
 export const companyController = {
   create: async (req: Request, res: Response) => {
@@ -10,10 +11,15 @@ export const companyController = {
         name,
         users,
       });
-      const companyCreated = await userController
-        .updateUserCompany(users, company.id)
-        .then(() => company.save());
-      return res.status(201).json({ data: companyCreated });
+      const { data } = await CompanyService.create({
+        name,
+        users: [],
+        units: [],
+      });
+      // const companyCreated = await userController
+      //   .updateUserCompany(users, company.id)
+      //   .then(() => company.save());
+      return res.status(201).json({ data });
     } catch (err) {
       return res.status(500).json({ message: err });
     }

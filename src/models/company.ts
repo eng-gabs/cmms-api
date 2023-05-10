@@ -1,10 +1,18 @@
 import { Document, ObjectId, Schema, SchemaTypes, model } from "mongoose";
 
-export interface Company extends Document {
+// export interface Company extends Document {
+//   name: string;
+//   users: ObjectId[];
+//   units: ObjectId[];
+// }
+
+export interface Company {
   name: string;
   users: ObjectId[];
   units: ObjectId[];
 }
+
+export type CompanyDoc = Document<Company>;
 
 const companySchema = new Schema<Company>(
   {

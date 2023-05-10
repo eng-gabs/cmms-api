@@ -1,6 +1,6 @@
 import { Model } from "mongoose";
 import { User, UserModel } from "../models/user";
-import { Company } from "../models/company";
+import { Company, CompanyDoc } from "../models/company";
 import { CompanyDAO } from "./companyDAO";
 
 interface IUserDAO {
@@ -77,7 +77,7 @@ export class UserDAOSingleton implements IUserDAO {
 
   // Update User Company DAO Method
 
-  async addCompany(id: string, company: Company) {
+  async addCompany(id: string, company: CompanyDoc) {
     const user = await this.read(id);
     if (!user) return null;
     user.company = company.id;

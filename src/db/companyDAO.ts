@@ -8,10 +8,7 @@ interface ICompanyDAO {
 
   create: (data: Company) => Promise<Company | null>;
   read: (id: string) => Promise<Company | null>;
-  update: (
-    id: string,
-    data: Omit<Company, "users" | "units">
-  ) => Promise<Company | null>;
+  update: (id: string, data: Partial<Company>) => Promise<Company | null>;
   delete: (id: string) => Promise<Company | null>;
 }
 
@@ -47,7 +44,7 @@ export class CompanyDAOSingleton implements ICompanyDAO {
 
     a nivel de dao é necessario implementar os dois casos por conta de performance?
   */
-  async update(id: string, newData: Omit<Company, "users" | "units">) {
+  async update(id: string, newData: Partial<Company>) {
     const companyModel = await this.read(id);
     // const updateCompany TODO: update company via CompanyDAO
     if (!companyModel) return null;
