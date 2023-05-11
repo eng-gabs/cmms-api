@@ -1,6 +1,8 @@
 import { Company } from "../models/company";
 import { CompanyDAO } from "../db/companyDAO";
 import { Err, Result } from "../utils/error";
+import { ObjectId } from "mongoose";
+import { AssetDAO } from "../db/assetDAO";
 
 const CompanyNotFound: (id: string) => Err = (id) => {
   return {
@@ -63,6 +65,17 @@ class CompanyServiceSingleton implements ICompanyService {
     const company = await this.companyDAO.delete(id);
     if (!company) return { error: CompanyNotFound(id) };
     return { data: company };
+  }
+
+  async getCompanyUnitsAssetsSummary(companyId: string) {
+    const company = await CompanyDAO.read(companyId);
+    if (!company) return { error: CompanyNotFound(companyId) };
+    const unitIds = company.units;
+
+    const healthLevels = await AssetDAO.getAssetsHealthLevelCount(unitIds, 1);
+    const status = await AssetDAO.getAssetStatusCount(unitIds);
+
+    return { data: status };
   }
 }
 

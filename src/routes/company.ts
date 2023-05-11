@@ -22,3 +22,7 @@ companyRouter.route("/:id").patch((req, res) => {
 companyRouter.route("/:id").delete((req, res) => {
   companyController.delete(req, res);
 });
+
+companyRouter.route("/:id/info").get((req, res) => {
+  companyController.info(req, res);
+});

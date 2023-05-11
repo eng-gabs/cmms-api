@@ -3,6 +3,10 @@ import { Company, CompanyModel } from "../models/company";
 import { userController } from "./userController";
 import { CompanyService } from "../services/companyService";
 import { sendErrorMessage } from "../utils/error";
+import { AssetDAO } from "../db/assetDAO";
+import { UserDAO } from "../db/userDAO";
+import { UnitDAO } from "../db/unitDAO";
+import { AssetStatus, Asset } from "../models/asset";
 
 export const companyController = {
   create: async (req: Request, res: Response) => {
@@ -78,5 +82,25 @@ export const companyController = {
     await CompanyModel.findByIdAndUpdate(companyId, {
       $push: { users: userId },
     });
+  },
+
+  info: async (req: Request, res: Response) => {
+    const unit = await UnitDAO.read("645d63cc4d3b287a4fe2dba7");
+    const teste = await AssetDAO.getAssetStatusCount([unit!._id!]);
+    const teste2 = await AssetDAO.filterUnitAssets({
+      unitIds: [unit!._id!],
+      // [AssetStatus.RUNNING]
+    });
+    const teste3 = await AssetDAO.getAssetsHealthLevelCount([unit!._id!], 1);
+
+    const input = {
+      companyId: req.params.id,
+    };
+
+    const { data } = await CompanyService.getCompanyUnitsAssetsSummary(
+      input.companyId
+    );
+
+    res.status(200).json({ data });
   },
 };
