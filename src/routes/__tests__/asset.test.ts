@@ -90,6 +90,32 @@ describe("Asset Test Suite", () => {
       unit: unit._id.toString(),
     });
   });
+  it("Update Asset (Change Unit): PATCH /api/asset/:id", async () => {
+    const unit1 = await createUnitForTesting();
+    const unit2 = await createUnitForTesting();
+    const asset = await AssetModel.create({
+      name: "AssetToUpdate",
+      unit: unit1._id,
+      description: "descricao",
+      image: "urlDaImagem",
+      model: "modelo",
+      owner: "dono",
+      status: "Running",
+      healthLevel: 1,
+    });
+    const result = await chai
+      .request(app)
+      .patch(`/api/asset/${asset.id}`)
+      .send({ name: "AssetUpdated", unit: unit2.id });
+    const unit1Updated = await UnitModel.findById(unit1.id);
+    const unit2Updated = await UnitModel.findById(unit2.id);
+    chai.expect(unit1Updated!.assets).to.not.contain(asset.id);
+    chai.expect(unit2Updated!.assets).to.contain(asset.id);
+    chai.expect(result.body.data).to.contain({
+      name: "AssetUpdated", // TODO: change unit
+      unit: unit2._id.toString(),
+    });
+  });
 
   it("Delete Asset: DELETE /api/asset/:id", async () => {
     const unit = await createUnitForTesting();
@@ -103,7 +129,10 @@ describe("Asset Test Suite", () => {
       status: "Running",
       healthLevel: 1,
     });
+    const assetId = asset.id;
     const result = await chai.request(app).delete(`/api/asset/${asset.id}`);
+    const unitAfterAssetDelete = await UnitModel.findById(unit._id);
+    chai.expect(unitAfterAssetDelete?.assets).to.not.contain(assetId);
     return chai.expect(result.body.data).to.contain({
       name: "AssetToDelete",
       unit: unit._id.toString(),

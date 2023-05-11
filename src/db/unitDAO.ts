@@ -1,8 +1,17 @@
 import { Model, ObjectId } from "mongoose";
 import { Unit, UnitModel } from "../models/unit";
-import { UserDAO } from "./userDAO";
-import { User } from "../models/user";
 import { CompanyDAO } from "./companyDAO";
+import { AssetDAO } from "./assetDAO";
+
+type KeysWithoutObjectIdArray<T> = {
+  [K in keyof T]: T[K] extends ObjectId[] ? never : K;
+}[keyof T];
+
+type ObjectIdToString<T> = {
+  [K in keyof T]: T[K] extends ObjectId ? string : T[K];
+};
+
+type CreateInput<T> = ObjectIdToString<Pick<T, KeysWithoutObjectIdArray<T>>>;
 
 export type UnitCreateInput = Omit<Unit, "company"> & { companyId: string };
 
@@ -38,9 +47,11 @@ export class UnitDAOSingleton implements IUnitDAO {
     // TODO: add unit to company
     const pushedUnit = await CompanyDAO.pushUnit(companyId, createdUnit.id);
     // if (!pushedUnit) return null; // TODO: throw could not push
+
+    // CAN NOT LINK ASSETS WHEN CREATING
     return await createdUnit.save();
   }
-  async read(id: string) {
+  async read(id: string | ObjectId) {
     const unitModel = await this.unitModel.findById(id);
     if (!unitModel) {
       return null;
@@ -50,6 +61,14 @@ export class UnitDAOSingleton implements IUnitDAO {
   async update(id: string, newData: Partial<Unit>) {
     const unitModel = await this.read(id);
     if (!unitModel) return null;
+    // Todo: change company
+    if (newData.company && newData.company != unitModel.company) {
+      const newCompanyUpdate = await CompanyDAO.pushUnit(newData.company, id);
+      const oldCompanyUpdate = await CompanyDAO.pullUnit(unitModel.company, id);
+    }
+    if (newData.assets) {
+      // TODO: throw error Change assets is not possible
+    }
     return await this.unitModel.findByIdAndUpdate(id, newData, {
       new: true,
     });
@@ -57,7 +76,11 @@ export class UnitDAOSingleton implements IUnitDAO {
   async delete(id: string) {
     const unitModel = await this.read(id);
     if (!unitModel) return null;
-    const deletedModel = await unitModel.deleteOne().then(() => unitModel);
+    // Remove company
+    await CompanyDAO.pullUnit(unitModel.company, id);
+    // Delete cascade assets
+    await AssetDAO.deleteAssetsInUnits([id]);
+    const deletedModel = await this.unitModel.findByIdAndDelete(id);
     return deletedModel;
   }
 
@@ -66,11 +89,27 @@ export class UnitDAOSingleton implements IUnitDAO {
     return unit?.populate("company assets") ?? null;
   }
 
-  async pushAsset(id: string, assetId: ObjectId) {
+  async pushAsset(id: string | ObjectId, assetId: ObjectId) {
     const unit = await this.read(id);
     if (!unit) return null;
-    unit.assets.push(assetId);
-    return await unit.save();
+    return await this.unitModel.findByIdAndUpdate(id, {
+      $push: { assets: assetId },
+    });
+  }
+
+  async pullAsset(id: string | ObjectId, assetId: ObjectId) {
+    const unit = await this.read(id);
+    if (!unit) return null;
+    return await this.unitModel.findByIdAndUpdate(id, {
+      $pull: { assets: assetId },
+    });
+  }
+
+  async deleteCompanyUnits(companyId: string | ObjectId) {
+    const unitsToDelete = await this.unitModel.find({ company: companyId });
+    const unitIds = unitsToDelete.map((unit) => unit.id);
+    await AssetDAO.deleteAssetsInUnits(unitIds);
+    return await this.unitModel.deleteMany({ company: companyId });
   }
 }
 

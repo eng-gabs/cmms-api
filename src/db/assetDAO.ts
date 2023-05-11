@@ -1,8 +1,5 @@
-import { Model } from "mongoose";
+import { Model, ObjectId } from "mongoose";
 import { Asset, AssetModel } from "../models/asset";
-import { UserDAO } from "./userDAO";
-import { User } from "../models/user";
-import { CompanyDAO } from "./companyDAO";
 import { UnitDAO } from "./unitDAO";
 
 export type AssetCreateInput = Omit<Asset, "unit"> & { unitId: string };
@@ -36,7 +33,7 @@ export class AssetDAOSingleton implements IAssetDAO {
       ...otherData,
       unit: unitId,
     });
-    const updateUnit = UnitDAO.pushAsset(unitId, createdAsset.id);
+    const updateUnit = await UnitDAO.pushAsset(unitId, createdAsset.id);
     // TODO: error handling
     return await createdAsset.save();
   }
@@ -48,8 +45,12 @@ export class AssetDAOSingleton implements IAssetDAO {
     return assetModel;
   }
   async update(id: string, newData: Partial<Asset>) {
-    const assetModel = await this.read(id);
-    if (!assetModel) return null;
+    const asset = await this.read(id);
+    if (!asset) return null;
+    if (newData.unit && asset.unit !== newData.unit) {
+      const newUnit = await UnitDAO.pushAsset(newData.unit, asset.id);
+      const oldUnit = await UnitDAO.pullAsset(asset.unit, asset.id);
+    }
     return await this.assetModel.findByIdAndUpdate(id, newData, {
       new: true,
     });
@@ -57,7 +58,8 @@ export class AssetDAOSingleton implements IAssetDAO {
   async delete(id: string) {
     const assetModel = await this.read(id);
     if (!assetModel) return null;
-    const deletedModel = await assetModel.deleteOne().then(() => assetModel);
+    await UnitDAO.pullAsset(assetModel.unit, assetModel.id);
+    const deletedModel = await this.assetModel.findByIdAndDelete(assetModel.id);
     return deletedModel;
   }
 
@@ -65,6 +67,23 @@ export class AssetDAOSingleton implements IAssetDAO {
     const asset = await this.read(id);
     return asset ? asset.populate("unit") : null;
   }
+
+  async deleteAssetsInUnits(unitIds: (string | ObjectId)[]) {
+    return await this.assetModel.deleteMany({ unit: { $in: unitIds } });
+  }
+
+  // async updateAssetsUnit(assetIds: string[], unitId: string) {
+  //   const batchUpdate = await this.assetModel.updateMany(
+  //     {
+  //       _id: { $in: assetIds },
+  //     },
+  //     { unit: unitId }
+  //   );
+  // }
+
+  // private async changeAssetUnit(asset: Document<Asset, {}, Asset>, newUnitId: string) {
+  //   asset.un
+  // }
 }
 
 export const AssetDAO = AssetDAOSingleton.getInstance();

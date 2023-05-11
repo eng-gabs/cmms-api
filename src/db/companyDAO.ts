@@ -1,8 +1,7 @@
-import { Model, ObjectId, Document } from "mongoose";
+import { Model, ObjectId } from "mongoose";
 import { Company, CompanyModel } from "../models/company";
-import { UserDAO } from "./userDAO";
 import { User } from "../models/user";
-import { Unit } from "../models/unit";
+import { UnitDAO } from "./unitDAO";
 
 interface ICompanyDAO {
   companyModel: Model<Company>;
@@ -29,7 +28,7 @@ export class CompanyDAOSingleton implements ICompanyDAO {
     const createdCompany = new this.companyModel(data);
     return await createdCompany.save();
   }
-  async read(id: string) {
+  async read(id: string | ObjectId) {
     const companyModel = await this.companyModel.findById(id);
     if (!companyModel) {
       return null;
@@ -50,7 +49,7 @@ export class CompanyDAOSingleton implements ICompanyDAO {
   // Not possible to update users and units using this method: use push and pull methods instead
   /* 
   Dois casos de uso: 
-    1. usuário quer atualizar toda a company com uma lista de usuarios
+    1. usuário quer atualizar toda a company com uma lista de usuarios (nao implementado)
     2. usuario quer adicionar ou remover um usuario dessa lista
 
     a nivel de dao é necessario implementar os dois casos por conta de performance?
@@ -59,6 +58,14 @@ export class CompanyDAOSingleton implements ICompanyDAO {
     const companyModel = await this.read(id);
     // const updateCompany TODO: update company via CompanyDAO
     if (!companyModel) return null;
+    if (newData.units) {
+      // throw error
+      return null;
+    }
+    if (newData.users) {
+      // throw error
+      return null;
+    }
     return await this.companyModel.findByIdAndUpdate(id, newData, {
       new: true,
     });
@@ -66,25 +73,25 @@ export class CompanyDAOSingleton implements ICompanyDAO {
   async delete(id: string) {
     const companyModel = await this.read(id);
     if (!companyModel) return null;
-    const deletedModel = await companyModel
-      .deleteOne()
-      .then(() => companyModel);
-    return deletedModel;
+    // Delete Cascade Units
+    await UnitDAO.deleteCompanyUnits(id);
+    return await this.companyModel.findByIdAndDelete(id);
   }
-  // TODO: remover gambiarra -> update 1:n em uma única direção: não é possível adicionar uma company pelo user, apenas por company (push e pull)
-  // TODO: UNIT DAO VAI SEGUIR ESSA LOGICA!
-  async addCompanyUser(id: string, user: User, updateUser?: boolean) {
+  async pushUser(id: string | ObjectId, userId: string | ObjectId) {
     const companyModel = await this.read(id);
     if (!companyModel) return null;
-    if (updateUser) await UserDAO.addCompany(user.id, companyModel.id);
-    companyModel.users.push(user.id);
-    return await companyModel.save();
+    const updatedCompany = await companyModel.updateOne(
+      {
+        $push: { users: userId },
+      },
+      { new: true }
+    );
+    return updatedCompany;
   }
 
-  async removeCompanyUser(id: string, userId: string, updateUser?: boolean) {
+  async pullUser(id: string | ObjectId, userId: string) {
     const companyModel = await this.read(id);
     if (!companyModel) return null;
-    if (updateUser) await UserDAO.removeCompany(userId);
     const updatedCompany = await companyModel.updateOne(
       {
         $pull: { users: userId },
@@ -94,11 +101,27 @@ export class CompanyDAOSingleton implements ICompanyDAO {
     return updatedCompany;
   }
 
-  async pushUnit(id: string, unitId: ObjectId) {
+  async pushUnit(id: string | ObjectId, unitId: string | ObjectId) {
     const company = await this.read(id);
     if (!company) return null;
-    company.units.push(unitId);
-    return await company.save();
+    return await this.companyModel.findByIdAndUpdate(
+      id,
+      {
+        $push: { units: unitId },
+      },
+      { new: true }
+    );
+  }
+  async pullUnit(id: string | ObjectId, unitId: string | ObjectId) {
+    const company = await this.read(id);
+    if (!company) return null;
+    return await this.companyModel.findByIdAndUpdate(
+      id,
+      {
+        $pull: { units: unitId },
+      },
+      { new: true }
+    );
   }
 }
 

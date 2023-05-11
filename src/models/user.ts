@@ -8,10 +8,16 @@ import {
 } from "mongoose";
 
 // Interface for documents,
-export interface User extends Document {
+// export interface User extends Document {
+//   name: string;
+//   email: string;
+//   company?: ObjectId;
+// }
+
+export interface User {
   name: string;
   email: string;
-  company?: ObjectId;
+  company: ObjectId;
 }
 
 const userSchema: Schema<User> = new Schema(

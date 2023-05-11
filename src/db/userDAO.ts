@@ -1,6 +1,5 @@
 import { Model } from "mongoose";
 import { User, UserModel } from "../models/user";
-import { Company, CompanyDoc } from "../models/company";
 import { CompanyDAO } from "./companyDAO";
 
 interface IUserDAO {
@@ -31,6 +30,7 @@ export class UserDAOSingleton implements IUserDAO {
     const createdUser = new this.userModel(data);
     // const userCreated = await this.userModel.create(data);
     // const updateCompany TODO: update company via CompanyDAO
+    await CompanyDAO.pushUser(data.company, createdUser.id);
     return await createdUser.save();
   }
   async read(id: string) {
@@ -47,10 +47,10 @@ export class UserDAOSingleton implements IUserDAO {
     if (!user) return null;
     // if user is linking a company, link user in company collection (apenas para user - update deve ser unidirecional)
     if (newData.company) {
-      await CompanyDAO.addCompanyUser(newData.company.toString(), user);
+      await CompanyDAO.pushUser(newData.company, user.id);
       // if user had already a company, remove from old one
       if (user.company && user.company !== newData.company) {
-        await CompanyDAO.removeCompanyUser(user.company.toString(), id);
+        await CompanyDAO.pullUser(user.company, id);
       }
     }
     return await this.userModel.findByIdAndUpdate(id, newData, {
@@ -73,22 +73,6 @@ export class UserDAOSingleton implements IUserDAO {
   async findByEmail(email: string) {
     const [user] = await this.userModel.find({ email });
     return user;
-  }
-
-  // Update User Company DAO Method
-
-  async addCompany(id: string, company: CompanyDoc) {
-    const user = await this.read(id);
-    if (!user) return null;
-    user.company = company.id;
-    return await user.save();
-  }
-
-  async removeCompany(id: string) {
-    const user = await this.read(id);
-    if (!user) return null;
-    user.company = undefined; // or user.update({ _id: id }, { $unset: { company: 1 }}
-    return await user.save();
   }
 }
 
