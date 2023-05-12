@@ -24,7 +24,7 @@ app.use(cors(options));
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("Express + TypeScript Server");
+  res.status(404).send("Main path is /api");
 });
 
 if (process.env.NODE_ENV !== "test") {
@@ -37,5 +37,5 @@ app.use("/api", router);
 app.use(errorMiddleware);
 
 app.listen(PORT, () => {
-  console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
+  console.log(`Server is running at http://localhost:${PORT}`);
 });

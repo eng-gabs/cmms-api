@@ -6,6 +6,9 @@ import { assetRouter } from "./asset";
 
 export const router = Router();
 
+router.route("/").get((req, res) => {
+  res.status(200).json({ message: "API is running" });
+});
 router.use("/user", userRouter);
 router.use("/company", companyRouter);
 router.use("/unit", unitRouter);
