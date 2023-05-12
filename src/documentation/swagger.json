@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Tractian Challenge",
-    "description": "This API is for Tractian Challenge",
+    "title": "Tractian Challenge API by Gabriel Duarte",
+    "description": "This API is for Tractian Challenge. Repository is available on: https://github.com/eng-gabs/cmms-api",
     "contact": {
       "email": "gabriel.martins.duarte@alumni.usp.br"
     },

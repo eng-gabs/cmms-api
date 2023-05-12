@@ -1,12 +1,12 @@
 # Tractian Backend Challenge API
 
-The purpose of this API is to fulfill Tractian's challenge demands. More information about the company can be found on [this link](tractian.com/)
+The purpose of this API is to fulfill Tractian's challenge demands. More information about the company can be found on [this link](https://tractian.com/)
 
 ## Testing
 
 ### Production:
 
-This project has been deployed for testing purposes on [this link](https://cmms-api.herokuapp.com/api/) and can be tested by anyone.
+This project has been deployed for testing purposes on [https://cmms-api.herokuapp.com/api/] and can be tested by anyone.
 
 ### Postman:
 
@@ -22,7 +22,7 @@ Also, every endpoint has an integration test written that can be found on src/ro
 - Basically there are CRUD endpoints for each entity (User, Company, Unit and Asset).
 - There are two endpoints to list objects with pagination: /unit and /asset
 - There is one data aggregated endpoint /company/{id}/info that returns two informations:
-  - Asset Status Summanry: which contains an object with the asset count for each status (Running, Stopped and Alerting)
+  - Asset Status Summary: which contains an object with the asset count for each status (Running, Stopped and Alerting)
   - Critical Assets: Assets with a health level lower than a given threshold or the default (0.75).
 
 ## How the project is structured
