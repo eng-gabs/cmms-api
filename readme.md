@@ -34,7 +34,7 @@ The 6 folders inside src and their responsability are listed below:
 - routes: api endpoints
 - controllers: presentation phase
 - services: business logic
-- db: data access layer (db connection and data access objects)
+- db: data access layer (db connection and data access objects).
 - models: entity models (mongoose schema)
 - middlewares: contains only the error middleware which is responsible for handling errors globally for the api.
 
@@ -64,6 +64,10 @@ Inside each folder there is a file for each entity of the model.
 
 ## Disclaimers and Future Improvements
 
+### Better typying and controllers adjustments
+
+The routes and controllers files could be much better typed. There should be a better treatment of the user input in order to avoid some type errors such as a number been passed as a string. I have experimented some type aliases in src/routes/unit.ts that could be useful for a controller to infer types from the routes in the future.
+
 ### Authentication
 
 - Authentication was not a demand, but implementing should be mandatory in a company production environment. Given the business needs, I think the user should be identified by a authorization token in order to use the API.
@@ -75,21 +79,3 @@ Inside each folder there is a file for each entity of the model.
 ## Thanks
 
 I want to thank Tractian's team for creating this challenge and giving this opportunity. I learned a lot! =)
-
-# todo
-
-[x] Melhorar testes de integração para eles testarem updates e deletes em cascata das relações
-[x] Refatorar para passar nos testes com Cascade como exemplo:
-Deletar empresa deve deletar todas as units e assets
-Deletar unit deve deletar todos os assets
-
-[ ] Tipagem dos body das requisições -> melhorar input do body e tipagem do controller (talvez fazer uma classe pro controller) + tipagem do filter da paginação
-[x] Bubble up de erros -> assistir videos no youtube primeiro
-[x] Documentar todos os endpoints
-[x] Melhorar endpoint de data aggregation
-
-Router + Controller - Apresentação (API)
-
-UseCase - Regra de Negócio
-
-Repository - Conexão com BD - ORM - cascades, updates, creates e reads
