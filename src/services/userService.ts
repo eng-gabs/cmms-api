@@ -1,6 +1,6 @@
 import { User } from "../models/user";
 import { UserDAO } from "../db/userDAO";
-import { Err, Result } from "../utils/error";
+import { Err, NotFoundError, Result } from "../utils/error";
 
 const UserNotFound: (id: string) => Err = (id) => {
   return {
@@ -55,20 +55,20 @@ class UserServiceSingleton implements IUserService {
   async read(id: string) {
     // TODO: intercept auth - owner
     const user = await this.userDAO.get(id);
-    if (!user) return { error: UserNotFound(id) };
+    if (!user) throw new NotFoundError("user", id);
     return { data: user };
   }
   async update(id: string, data: Partial<User>) {
     // TODO: intercept auth - owner
     const user = await this.userDAO.update(id, data);
-    if (!user) return { error: UserNotFound(id) };
+    if (!user) throw new NotFoundError("user", id);
     return { data: user };
   }
 
   async delete(id: string) {
     // TODO: intercept auth - owner
     const user = await this.userDAO.delete(id);
-    if (!user) return { error: UserNotFound(id) };
+    if (!user) throw new NotFoundError("user", id);
     return { data: user };
   }
 }

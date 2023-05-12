@@ -1,12 +1,7 @@
 import { Request, Response } from "express";
 import { User, UserModel } from "../models/user";
 import { companyController } from "./companyController";
-import { UserErrors, UserService } from "../services/userService";
-import {
-  Err,
-  processRequestAndResponseWrapper,
-  sendErrorMessage,
-} from "../utils/error";
+import { UserService } from "../services/userService";
 
 export interface Controller<T> {
   [key: string]: (
@@ -17,14 +12,10 @@ export interface Controller<T> {
 
 export const userController: Controller<User> = {
   getById: async (req, res) => {
-    return await processRequestAndResponseWrapper(
-      async (req, res) => {
-        const id = req.params.id;
-        return await UserService.read(id);
-      },
-      req,
-      res
-    );
+    const id = req.params.id;
+    const { data } = await UserService.read(id);
+
+    return res.status(200).json({ data });
 
     // try {
     //   const id = req.params.id;
@@ -39,18 +30,10 @@ export const userController: Controller<User> = {
     // }
   },
   updateById: async (req: Request, res: Response) => {
-    try {
-      const id = req.params.id;
-      const newData: Partial<User> = req.body;
-      const { data, error } = await UserService.update(id, newData);
-      if (error) {
-        return sendErrorMessage(error, res);
-      } else {
-        return res.status(200).json({ data });
-      }
-    } catch (err) {
-      return res.status(500).json({ message: err });
-    }
+    const id = req.params.id;
+    const newData: Partial<User> = req.body;
+    const { data } = await UserService.update(id, newData);
+    return res.status(200).json({ data });
   },
   deleteById: async (req: Request, res: Response) => {
     try {
