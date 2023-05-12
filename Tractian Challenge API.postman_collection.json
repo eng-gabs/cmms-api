@@ -1,0 +1,640 @@
+{
+	"info": {
+		"_postman_id": "5239165f-c448-405c-9570-36fa37473d11",
+		"name": "Tractian Challenge API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Company",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Empresa teste\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cmms-api.herokuapp.com/api/company",
+					"protocol": "https",
+					"host": [
+						"cmms-api",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"company"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Company",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Empresa do Gabs\",\n    \"users\": [\"64566f84c89a342855c8c91d\"]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cmms-api.herokuapp.com/api/company/645ec2ee5a9b214eb7bde18e",
+					"protocol": "https",
+					"host": [
+						"cmms-api",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"company",
+						"645ec2ee5a9b214eb7bde18e"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Company",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Empresa Teste\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cmms-api.herokuapp.com/api/company/645ec2ee5a9b214eb7bde18e",
+					"protocol": "https",
+					"host": [
+						"cmms-api",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"company",
+						"645ec2ee5a9b214eb7bde18e"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Company",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"asset1\",\n    \"description\": \"primeiro asset\",\n    \"image\": \"urlDaImagem\",\n    \"model\": \"modelo\",\n    \"owner\": \"dono\",\n    \"status\": \"a\",\n    \"healthLevel\": 0\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cmms-api.herokuapp.com/api/company/645ec2ee5a9b214eb7bde18e",
+					"protocol": "https",
+					"host": [
+						"cmms-api",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"company",
+						"645ec2ee5a9b214eb7bde18e"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Gabriel\",\n    \"email\": \"gabriel.martins.duarte@alumni.usp.br\",\n    \"company\": \"645ec2ee5a9b214eb7bde18e\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cmms-api.herokuapp.com/api/user",
+					"protocol": "https",
+					"host": [
+						"cmms-api",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://cmms-api.herokuapp.com/api/user/645ec3785a9b214eb7bde195",
+					"protocol": "https",
+					"host": [
+						"cmms-api",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"user",
+						"645ec3785a9b214eb7bde195"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Gabriel Duarte\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cmms-api.herokuapp.com/api/user/645ec3785a9b214eb7bde195",
+					"protocol": "https",
+					"host": [
+						"cmms-api",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"user",
+						"645ec3785a9b214eb7bde195"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://cmms-api.herokuapp.com/api/user/645ec3785a9b214eb7bde195",
+					"protocol": "https",
+					"host": [
+						"cmms-api",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"user",
+						"645ec3785a9b214eb7bde195"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Unit",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Unit Teste\",\n    \"companyId\": \"645ec2ee5a9b214eb7bde18e\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cmms-api.herokuapp.com/api/unit",
+					"protocol": "https",
+					"host": [
+						"cmms-api",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"unit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Unit",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Unit do Gabs e da ce\",\n    \"companyId\": \"abc\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cmms-api.herokuapp.com/api/unit/645ec3be5a9b214eb7bde19c",
+					"protocol": "https",
+					"host": [
+						"cmms-api",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"unit",
+						"645ec3be5a9b214eb7bde19c"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Units",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Unit do Gabs e da ce\",\n    \"companyId\": \"abc\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cmms-api.herokuapp.com/api/unit?companyId=645ec2ee5a9b214eb7bde18e",
+					"protocol": "https",
+					"host": [
+						"cmms-api",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"unit"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "3",
+							"disabled": true
+						},
+						{
+							"key": "skip",
+							"value": "3",
+							"disabled": true
+						},
+						{
+							"key": "companyId",
+							"value": "645ec2ee5a9b214eb7bde18e"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Unit",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Unit teste\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cmms-api.herokuapp.com/api/unit/645ec3be5a9b214eb7bde19c",
+					"protocol": "https",
+					"host": [
+						"cmms-api",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"unit",
+						"645ec3be5a9b214eb7bde19c"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Unit",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Unit do Gabs e da ce\",\n    \"companyId\": \"abc\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cmms-api.herokuapp.com/api/unit/645ec3be5a9b214eb7bde19c",
+					"protocol": "https",
+					"host": [
+						"cmms-api",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"unit",
+						"645ec3be5a9b214eb7bde19c"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Asset",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Asset Teste\",\n    \"description\": \"Asset para teste\",\n    \"image\": \"urlDaImagem\",\n    \"model\": \"modelo\",\n    \"owner\": \"dono\",\n    \"status\": \"Running\",\n    \"healthLevel\": 1,\n    \"unitId\": \"645ec3be5a9b214eb7bde19c\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cmms-api.herokuapp.com/api/asset",
+					"protocol": "https",
+					"host": [
+						"cmms-api",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"asset"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Asset",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Unit do Gabs e da ce\",\n    \"companyId\": \"abc\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cmms-api.herokuapp.com/api/asset/645ec4315a9b214eb7bde1a6",
+					"protocol": "https",
+					"host": [
+						"cmms-api",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"asset",
+						"645ec4315a9b214eb7bde1a6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Assets",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Unit do Gabs e da ce\",\n    \"companyId\": \"abc\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cmms-api.herokuapp.com/api/unit?companyId=645ec2ee5a9b214eb7bde18e",
+					"protocol": "https",
+					"host": [
+						"cmms-api",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"unit"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "3",
+							"disabled": true
+						},
+						{
+							"key": "skip",
+							"value": "3",
+							"disabled": true
+						},
+						{
+							"key": "companyId",
+							"value": "645ec2ee5a9b214eb7bde18e"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Asset",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Asset teste\",\n    \"description\": \"Asset para teste\",\n    \"image\": \"https://pudim.com.br\",\n    \"model\": \"modelo\",\n    \"owner\": \"dono\",\n    \"status\": \"Running\",\n    \"healthLevel\": 1,\n    \"unit\": \"645ec3be5a9b214eb7bde19c\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cmms-api.herokuapp.com/api/asset/645ec4315a9b214eb7bde1a6",
+					"protocol": "https",
+					"host": [
+						"cmms-api",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"asset",
+						"645ec4315a9b214eb7bde1a6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Asset",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"asset1\",\n    \"description\": \"primeiro asset\",\n    \"image\": \"urlDaImagem\",\n    \"model\": \"modelo\",\n    \"owner\": \"dono\",\n    \"status\": \"a\",\n    \"healthLevel\": 0\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cmms-api.herokuapp.com/api/asset/645ec4315a9b214eb7bde1a6",
+					"protocol": "https",
+					"host": [
+						"cmms-api",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"asset",
+						"645ec4315a9b214eb7bde1a6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Company Info",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cmms-api.herokuapp.com/api/company/645ec2ee5a9b214eb7bde18e/info?status=[\"Running\", \"Stopped\"]&criticalHealth=0.6",
+					"protocol": "https",
+					"host": [
+						"cmms-api",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"company",
+						"645ec2ee5a9b214eb7bde18e",
+						"info"
+					],
+					"query": [
+						{
+							"key": "unitIds",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "status",
+							"value": "[\"Running\", \"Stopped\"]"
+						},
+						{
+							"key": "criticalHealth",
+							"value": "0.6"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

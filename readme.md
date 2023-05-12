@@ -10,7 +10,7 @@ This project has been deployed for testing purposes on [https://cmms-api.herokua
 
 ### Postman:
 
-If you use postman for testing you can download the [json file] in the root directory to test it faster.
+If you use postman for testing you can download the postman json file in the root directory to test it.
 
 ### Integration Tests:
 
