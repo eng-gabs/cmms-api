@@ -33,6 +33,8 @@ The 6 folders inside src and their responsability are listed below:
 - models: entity models (mongoose schema)
 - middlewares: contains only the error middleware which is responsible for handling errors globally for the api.
 
+Also there is the index file inside src which initiate the server
+
 Inside each folder there is a file for each entity of the model.
 
 ## Packages
@@ -58,6 +60,8 @@ Inside each folder there is a file for each entity of the model.
 ## Disclaimers
 
 ## Future Improvements
+
+## Thanks
 
 I want to thank Tractian's team for creating this challenge and giving this opportunity. I learned a lot! =)
 
