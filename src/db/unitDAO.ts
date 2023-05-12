@@ -52,6 +52,7 @@ export class UnitDAOSingleton implements IUnitDAO {
   }
 
   async list(companyId: string, pagination: Pagination) {
+    const company = await CompanyDAO.read(companyId); // Checks if company exists
     const model = this.unitModel;
     const list = await pagination.findItemsWithPagination(model, {
       company: companyId,
