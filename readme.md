@@ -18,6 +18,8 @@ Also, every endpoint has an integration test written that can be found on src/ro
 
 ## API Documentation
 
+The endpoints are well documented using SwaggerUI available on [this link](https://cmms-api.herokuapp.com/docs/).
+
 [ ] Detalhar todos os endpoints
 
 ## How the project is structured

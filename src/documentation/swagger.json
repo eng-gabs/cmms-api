@@ -1,0 +1,17 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Tractian Challenge",
+        "description": "This API is for Tractian Challenge",
+        "contact": {
+            "email": "gabriel.martins.duarte@alumni.usp.br"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://cmms-api.herokuapp.com/api/",
+            "description": "Heroku test endpoint"
+        }
+    ]
+}

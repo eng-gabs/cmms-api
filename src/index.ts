@@ -1,4 +1,6 @@
 import "express-async-errors";
+import swaggerUi from "swagger-ui-express";
+import swaggerDocs from "./documentation/swagger.json";
 import express from "express";
 import cors from "cors";
 import { connectDB } from "./db/connection";
@@ -22,6 +24,8 @@ const options: cors.CorsOptions = {
 
 app.use(cors(options));
 app.use(express.json());
+
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.get("/", (req, res) => {
   res.status(404).send("Main path is /api");
