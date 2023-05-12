@@ -32,7 +32,7 @@ export class UnitDAOSingleton implements IUnitDAO {
       company: companyId,
     });
     const pushedUnit = await CompanyDAO.pushUnit(companyId, createdUnit.id);
-    if (data.assets) {
+    if (data.assets && data.assets.length > 0) {
       throw new BadInputError("Can not link Assets before creating Unit.");
     }
     return await createdUnit.save();
