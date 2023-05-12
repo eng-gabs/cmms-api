@@ -18,3 +18,7 @@ assetRouter.route("/:id").delete(async (req, res) => {
 assetRouter.route("/:id").patch(async (req, res) => {
   await assetControler.update(req, res);
 });
+
+assetRouter.route("/").get(async (req, res) => {
+  await assetControler.list(req, res);
+});

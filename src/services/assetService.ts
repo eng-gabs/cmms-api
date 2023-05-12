@@ -2,6 +2,7 @@ import { Asset, AssetStatus } from "../models/asset";
 import { AssetCreateInput, AssetDAO } from "../db/assetDAO";
 import { BadInputError } from "../middlewares/error";
 import { ObjectId } from "mongoose";
+import { Pagination } from "../db/pagination";
 
 interface IAssetService {
   assetDAO: typeof AssetDAO;
@@ -45,9 +46,12 @@ class AssetServiceSingleton implements IAssetService {
   }
 
   async delete(id: string) {
-    // TODO: intercept auth - owner
     const asset = await this.assetDAO.delete(id);
     return asset;
+  }
+
+  async list(unitId: string, pagination: Pagination) {
+    return await this.assetDAO.list(unitId, pagination);
   }
   async getAssetsInfoSummary(input: {
     unitIds: (string | ObjectId)[];

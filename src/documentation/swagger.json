@@ -428,6 +428,31 @@
         "responses": {
           "200": { "description": "Asset Created" }
         }
+      },
+      "get": {
+        "summary": "Lists unit assets",
+        "description": "Receives a unitId to query all assets from that unit. Also can be paginated using skip and limit.",
+        "tags": ["Asset"],
+        "parameters": [
+          {
+            "name": "unitId",
+            "in": "query",
+            "description": "unit id",
+            "required": true
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "limit the numbers of objects to be returned. Default is 3",
+            "required": false
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "description": "skip the first objects for pagination. Default is 0 (first page).",
+            "required": false
+          }
+        ]
       }
     }
   },

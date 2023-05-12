@@ -2,6 +2,7 @@ import { Model, ObjectId, Types } from "mongoose";
 import { Asset, AssetModel, AssetStatus } from "../models/asset";
 import { UnitDAO } from "./unitDAO";
 import { NotFoundError } from "../middlewares/error";
+import { Pagination } from "./pagination";
 
 export type AssetCreateInput = Omit<Asset, "unit"> & { unitId: string };
 
@@ -73,6 +74,15 @@ export class AssetDAOSingleton implements IAssetDAO {
     return await this.assetModel.deleteMany({
       unit: { $in: unitIds },
     });
+  }
+
+  async list(unitId: string, pagination: Pagination) {
+    const company = await UnitDAO.read(unitId); // Checks if company exists
+    const model = this.assetModel;
+    const list = await pagination.findItemsWithPagination(model, {
+      unit: unitId,
+    });
+    return list;
   }
 
   getFilterUnitAssetsObject(input: {
