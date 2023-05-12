@@ -3,26 +3,26 @@ import { companyController } from "../controllers/companyController";
 
 export const companyRouter = Router();
 
-companyRouter.route("/").post((req, res) => {
-  companyController.create(req, res);
+companyRouter.route("/").post(async (req, res) => {
+  await companyController.create(req, res);
 });
 
-companyRouter.route("/all").get((req, res) => {
-  companyController.getAll(req, res);
+companyRouter.route("/all").get(async (req, res) => {
+  await companyController.getAll(req, res);
 });
 
-companyRouter.route("/:id").get((req, res) => {
-  companyController.getById(req, res);
+companyRouter.route("/:id").get(async (req, res) => {
+  await companyController.getById(req, res);
 });
 
-companyRouter.route("/:id").patch((req, res) => {
-  companyController.update(req, res);
+companyRouter.route("/:id").patch(async (req, res) => {
+  await companyController.update(req, res);
 });
 
-companyRouter.route("/:id").delete((req, res) => {
-  companyController.delete(req, res);
+companyRouter.route("/:id").delete(async (req, res) => {
+  await companyController.delete(req, res);
 });
 
-companyRouter.route("/:id/info").get((req, res) => {
-  companyController.info(req, res);
+companyRouter.route("/:id/info").get(async (req, res) => {
+  await companyController.info(req, res);
 });

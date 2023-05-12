@@ -1,8 +1,10 @@
+import "express-async-errors";
 import express from "express";
 import cors from "cors";
 import { connectDB } from "./db/connection";
 import { router } from "./routes/router";
 import { config } from "dotenv";
+import { errorMiddleware } from "./middlewares/error";
 
 config({
   path: process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : ".env",
@@ -31,6 +33,8 @@ if (process.env.NODE_ENV !== "test") {
 
 // Routes
 app.use("/api", router);
+
+app.use(errorMiddleware);
 
 app.listen(PORT, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);

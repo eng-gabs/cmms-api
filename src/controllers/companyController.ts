@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { Company, CompanyModel } from "../models/company";
 import { userController } from "./userController";
 import { CompanyService } from "../services/companyService";
-import { sendErrorMessage } from "../utils/error";
+import { sendErrorMessage, Err } from "../utils/error";
 import { AssetDAO } from "../db/assetDAO";
 import { UserDAO } from "../db/userDAO";
 import { UnitDAO } from "../db/unitDAO";
@@ -95,7 +95,12 @@ export const companyController = {
 
     const input = {
       companyId: req.params.id,
+      unitIds: req.query.units,
+      status: req.query.status,
+      criticalHealth: req.query.criticalHealth,
     };
+
+    console.log("input", input);
 
     const { data } = await CompanyService.getCompanyUnitsAssetsSummary(
       input.companyId

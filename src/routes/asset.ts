@@ -3,18 +3,18 @@ import { assetControler } from "../controllers/assetControler";
 
 export const assetRouter = Router();
 
-assetRouter.route("/").post((req, res) => {
-  assetControler.create(req, res);
+assetRouter.route("/").post(async (req, res) => {
+  await assetControler.create(req, res);
 });
 
-assetRouter.route("/:id").get((req, res) => {
-  assetControler.get(req, res);
+assetRouter.route("/:id").get(async (req, res) => {
+  await assetControler.get(req, res);
 });
 
-assetRouter.route("/:id").delete((req, res) => {
-  assetControler.delete(req, res);
+assetRouter.route("/:id").delete(async (req, res) => {
+  await assetControler.delete(req, res);
 });
 
-assetRouter.route("/:id").patch((req, res) => {
-  assetControler.update(req, res);
+assetRouter.route("/:id").patch(async (req, res) => {
+  await assetControler.update(req, res);
 });
