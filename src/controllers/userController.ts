@@ -13,54 +13,35 @@ export interface Controller<T> {
 export const userController: Controller<User> = {
   getById: async (req, res) => {
     const id = req.params.id;
-    const { data } = await UserService.read(id);
-
-    return res.status(200).json({ data });
-
-    // try {
-    //   const id = req.params.id;
-    //   const { data, error } = await UserService.read(id);
-    //   if (error) {
-    //     return sendErrorMessage(error, res);
-    //   } else {
-    //     return res.status(200).json({ data });
-    //   }
-    // } catch (err) {
-    //   return res.status(500).json({ message: err });
-    // }
+    const user = await UserService.read(id);
+    return res.status(200).json({ data: user });
   },
   updateById: async (req: Request, res: Response) => {
     const id = req.params.id;
     const newData: Partial<User> = req.body;
-    const { data } = await UserService.update(id, newData);
-    return res.status(200).json({ data });
+    const user = await UserService.update(id, newData);
+    return res.status(200).json({ data: user });
   },
   deleteById: async (req: Request, res: Response) => {
-    try {
-      const id = req.params.id;
-      const data = await UserModel.findByIdAndDelete(id);
-      return res.status(200).json({ data, msg: "Data deleted" });
-    } catch (err) {}
+    const id = req.params.id;
+    const data = await UserModel.findByIdAndDelete(id);
+    return res.status(200).json({ data, msg: "Data deleted" });
   },
   getAll: async (req: Request, res: Response) => {
-    try {
-      const data = await UserModel.find();
-      return res.status(200).json({ data });
-    } catch (err) {}
+    const data = await UserModel.find();
+    return res.status(200).json({ data });
   },
   create: async (req: Request, res: Response) => {
-    try {
-      const companyId: string | undefined = req.body.company;
-      const data = await UserModel.create({
-        name: req.body.name,
-        email: req.body.email,
-        company: companyId,
-      });
-      if (companyId) {
-        await companyController.addUser(companyId, data._id.toString());
-      }
-      return res.status(200).json({ data });
-    } catch (err) {}
+    const companyId: string | undefined = req.body.company;
+    const data = await UserModel.create({
+      name: req.body.name,
+      email: req.body.email,
+      company: companyId,
+    });
+    if (companyId) {
+      await companyController.addUser(companyId, data._id.toString());
+    }
+    return res.status(200).json({ data });
   },
   // updateUserCompany: async (users: string[], companyId: string) => {
   //   await UserModel.updateMany({ _id: { $in: users } }, { company: companyId });

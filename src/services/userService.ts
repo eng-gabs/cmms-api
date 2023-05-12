@@ -1,32 +1,13 @@
 import { User } from "../models/user";
 import { UserDAO } from "../db/userDAO";
-import { Err, NotFoundError, Result } from "../utils/error";
-
-const UserNotFound: (id: string) => Err = (id) => {
-  return {
-    message: `Usuário com id ${id} não encontrado`,
-    status: 404,
-  };
-};
-
-const EmailAlreadyRegisteredError: Err = {
-  message: "E-mail inválido",
-  status: 422,
-};
-
-export type UserErrors =
-  | ReturnType<typeof UserNotFound>
-  | typeof EmailAlreadyRegisteredError;
-
-type UserResult = Result<User, UserErrors>;
-
+import { BadInputError, NotFoundError } from "../utils/error";
 interface IUserService {
   userDAO: typeof UserDAO;
 
-  create: (data: User) => Promise<UserResult>;
-  read: (id: string) => Promise<UserResult>;
-  update: (id: string, data: Partial<User>) => Promise<UserResult>;
-  delete: (id: string) => Promise<UserResult>;
+  create: (data: User) => Promise<User>;
+  read: (id: string) => Promise<User>;
+  update: (id: string, data: Partial<User>) => Promise<User>;
+  delete: (id: string) => Promise<User>;
 }
 
 class UserServiceSingleton implements IUserService {
@@ -46,30 +27,27 @@ class UserServiceSingleton implements IUserService {
     const { email } = data;
     const emailAlreadyRegistered = !!(await this.userDAO.findByEmail(email));
     if (emailAlreadyRegistered) {
-      return { error: EmailAlreadyRegisteredError };
+      throw new BadInputError("Invalid e-mail");
     }
     // TODO: intercept auth - company user
     const userCreated = await this.userDAO.create(data);
-    return { data: userCreated };
+    return userCreated;
   }
   async read(id: string) {
     // TODO: intercept auth - owner
     const user = await this.userDAO.get(id);
-    if (!user) throw new NotFoundError("user", id);
-    return { data: user };
+    return user;
   }
   async update(id: string, data: Partial<User>) {
     // TODO: intercept auth - owner
     const user = await this.userDAO.update(id, data);
-    if (!user) throw new NotFoundError("user", id);
-    return { data: user };
+    return user;
   }
 
   async delete(id: string) {
     // TODO: intercept auth - owner
     const user = await this.userDAO.delete(id);
-    if (!user) throw new NotFoundError("user", id);
-    return { data: user };
+    return user;
   }
 }
 
