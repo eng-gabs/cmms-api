@@ -40,7 +40,8 @@ export class CompanyDAOSingleton implements ICompanyDAO {
   async getCompanyWithObjects(id: string) {
     const companyModel = await this.companyModel
       .findById(id)
-      .populate("users units");
+      .populate("users units")
+      .populate({ path: "units", populate: "assets" });
     if (!companyModel) {
       throw new NotFoundError("company", id);
     }
