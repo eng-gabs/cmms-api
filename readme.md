@@ -6,7 +6,7 @@ The purpose of this API is to fulfill Tractian's challenge demands. More informa
 
 ### Production:
 
-This project has been deployed for testing purposes on [https://cmms-api.herokuapp.com/api/] and can be tested by anyone.
+This project has been deployed for testing purposes on https://cmms-api.herokuapp.com/api/ and can be tested by anyone.
 
 ### Postman:
 
