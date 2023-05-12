@@ -12,8 +12,6 @@ export interface Company {
   units: ObjectId[];
 }
 
-export type CompanyDoc = Document<Company>;
-
 const companySchema = new Schema<Company>(
   {
     name: {
@@ -23,15 +21,13 @@ const companySchema = new Schema<Company>(
     users: {
       type: [SchemaTypes.ObjectId],
       ref: "User",
-      required: true,
+      required: false,
     },
-    units: [
-      {
-        type: SchemaTypes.ObjectId,
-        ref: "Unit",
-        required: false,
-      },
-    ],
+    units: {
+      type: [SchemaTypes.ObjectId],
+      ref: "Unit",
+      required: false,
+    },
   },
   { timestamps: true }
 );

@@ -2,14 +2,15 @@ import { Model, ObjectId } from "mongoose";
 import { Company, CompanyModel } from "../models/company";
 import { User } from "../models/user";
 import { UnitDAO } from "./unitDAO";
+import { BadInputError, NotFoundError } from "../utils/error";
 
 interface ICompanyDAO {
   companyModel: Model<Company>;
 
-  create: (data: Company) => Promise<Company | null>;
-  read: (id: string) => Promise<Company | null>;
-  update: (id: string, data: Partial<Company>) => Promise<Company | null>;
-  delete: (id: string) => Promise<Company | null>;
+  create: (data: Company) => Promise<Company>;
+  read: (id: string) => Promise<Company>;
+  update: (id: string, data: Partial<Company>) => Promise<Company>;
+  delete: (id: string) => Promise<Company>;
 }
 
 export class CompanyDAOSingleton implements ICompanyDAO {
@@ -31,7 +32,7 @@ export class CompanyDAOSingleton implements ICompanyDAO {
   async read(id: string | ObjectId) {
     const companyModel = await this.companyModel.findById(id);
     if (!companyModel) {
-      return null;
+      throw new NotFoundError("company", id.toString());
     }
     return companyModel;
   }
@@ -41,7 +42,7 @@ export class CompanyDAOSingleton implements ICompanyDAO {
       .findById(id)
       .populate("users units");
     if (!companyModel) {
-      return null;
+      throw new NotFoundError("company", id);
     }
     return companyModel;
   }
@@ -56,72 +57,76 @@ export class CompanyDAOSingleton implements ICompanyDAO {
   */
   async update(id: string, newData: Partial<Company>) {
     const companyModel = await this.read(id);
-    // const updateCompany TODO: update company via CompanyDAO
-    if (!companyModel) return null;
     if (newData.units) {
-      // throw error
-      return null;
+      throw new BadInputError(
+        "Units can not be updated through company endpoint. Use PATCH /api/unit/:id instead."
+      );
     }
     if (newData.users) {
-      // throw error
-      return null;
+      throw new BadInputError(
+        "Users can not be updated through company endpoint. Use PATCH /api/user/:id instead."
+      );
     }
-    return await this.companyModel.findByIdAndUpdate(id, newData, {
-      new: true,
-    });
+    const updatedCompany = await this.companyModel.findByIdAndUpdate(
+      id,
+      newData,
+      {
+        new: true,
+      }
+    );
+    return updatedCompany!;
   }
   async delete(id: string) {
-    const companyModel = await this.read(id);
-    if (!companyModel) return null;
-    // Delete Cascade Units
-    await UnitDAO.deleteCompanyUnits(id);
-    return await this.companyModel.findByIdAndDelete(id);
+    const companyBeforeDelete = await this.read(id);
+    await UnitDAO.deleteCompanyUnits(id); // Delete Cascade Units
+    await this.companyModel.findByIdAndDelete(id);
+    return companyBeforeDelete;
   }
   async pushUser(id: string | ObjectId, userId: string | ObjectId) {
-    const companyModel = await this.read(id);
-    if (!companyModel) return null;
-    const updatedCompany = await companyModel.updateOne(
+    const updatedCompany = await this.companyModel.findByIdAndUpdate(
+      id,
       {
         $push: { users: userId },
       },
       { new: true }
     );
+    if (!updatedCompany) throw new NotFoundError("company", id.toString());
     return updatedCompany;
   }
 
   async pullUser(id: string | ObjectId, userId: string) {
-    const companyModel = await this.read(id);
-    if (!companyModel) return null;
-    const updatedCompany = await companyModel.updateOne(
+    const updatedCompany = await this.companyModel.findByIdAndUpdate(
+      id,
       {
         $pull: { users: userId },
       },
       { new: true }
     );
+    if (!updatedCompany) throw new NotFoundError("company", id.toString());
     return updatedCompany;
   }
 
   async pushUnit(id: string | ObjectId, unitId: string | ObjectId) {
-    const company = await this.read(id);
-    if (!company) return null;
-    return await this.companyModel.findByIdAndUpdate(
+    const updatedCompany = await this.companyModel.findByIdAndUpdate(
       id,
       {
         $push: { units: unitId },
       },
       { new: true }
     );
+    if (!updatedCompany) throw new NotFoundError("company", id.toString());
+    return updatedCompany;
   }
   async pullUnit(id: string | ObjectId, unitId: string | ObjectId) {
-    const company = await this.read(id);
-    if (!company) return null;
-    return await this.companyModel.findByIdAndUpdate(
+    const updatedCompany = await this.companyModel.findByIdAndUpdate(
       id,
       {
         $pull: { units: unitId },
       },
       { new: true }
     );
+    if (!updatedCompany) throw new NotFoundError("company", id.toString());
+    return updatedCompany;
   }
 }
 

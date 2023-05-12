@@ -14,6 +14,6 @@ export const errorMiddleware = (
   const { message, statusCode } = assertIsApiError(error)
     ? { message: error.message, statusCode: error.statusCode }
     : { message: "Internal Server Error", statusCode: 500 };
-
+  console.error(error);
   return res.status(statusCode).json({ message });
 };

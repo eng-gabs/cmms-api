@@ -1,89 +1,45 @@
 import { Request, Response } from "express";
 import { Company, CompanyModel } from "../models/company";
-import { userController } from "./userController";
 import { CompanyService } from "../services/companyService";
-import { sendErrorMessage, Err } from "../utils/error";
 import { AssetDAO } from "../db/assetDAO";
-import { UserDAO } from "../db/userDAO";
 import { UnitDAO } from "../db/unitDAO";
-import { AssetStatus, Asset } from "../models/asset";
 
 export const companyController = {
   create: async (req: Request, res: Response) => {
-    try {
-      const { name, users, units } = req.body;
-      const { data } = await CompanyService.create({
-        name,
-        users: users ?? [],
-        units: units ?? [],
-      });
-
-      return res.status(201).json({ data });
-    } catch (err) {
-      return res.status(500).json({ message: err });
-    }
+    const { name, users, units } = req.body;
+    const data = await CompanyService.create({
+      name,
+      users: users ?? [],
+      units: units ?? [],
+    });
+    return res.status(201).json({ data });
   },
 
   getById: async (req: Request, res: Response) => {
-    try {
-      const id = req.params.id;
-      const { data, error } = await CompanyService.read(id);
-      if (error) {
-        return sendErrorMessage(error, res);
-      } else {
-        return res.status(200).json({ data });
-      }
-    } catch (err) {
-      return res.status(500).json({ message: err });
-    }
+    const id = req.params.id;
+    const data = await CompanyService.read(id);
+    return res.status(200).json({ data });
   },
   getAll: async (req: Request, res: Response) => {
-    try {
-      const data = await CompanyModel.find().populate("users");
-      return res.status(200).json({ data });
-    } catch (err) {
-      return res.status(500).json({ message: err });
-    }
+    const data = await CompanyModel.find().populate("users");
+    return res.status(200).json({ data });
   },
 
   update: async (req: Request, res: Response) => {
-    try {
-      const id = req.params.id;
-      const newData: Partial<Company> = {
-        name: req.body.name ?? undefined,
-        users: req.body.users ?? undefined,
-        units: req.body.units ?? undefined,
-      };
-      const { data, error } = await CompanyService.update(id, newData);
-      if (error) {
-        return sendErrorMessage(error, res);
-      } else {
-        return res.status(200).json({ data });
-      }
-    } catch (err) {
-      return res.status(500).json({ message: err });
-    }
+    const id = req.params.id;
+    const newData: Partial<Company> = {
+      name: req.body.name ?? undefined,
+      users: req.body.users ?? undefined,
+      units: req.body.units ?? undefined,
+    };
+    const data = await CompanyService.update(id, newData);
+    return res.status(200).json({ data });
   },
   delete: async (req: Request, res: Response) => {
-    try {
-      const id = req.params.id;
-      const { data, error } = await CompanyService.delete(id);
-      if (error) {
-        return sendErrorMessage(error, res);
-      } else {
-        return res.status(200).json({ data });
-      }
-    } catch (err) {
-      return res.status(500).json({ message: err });
-    }
+    const id = req.params.id;
+    const data = await CompanyService.delete(id);
+    return res.status(200).json({ data });
   },
-
-  addUser: async (companyId: string, userId: string) => {
-    await CompanyModel.findByIdAndUpdate(companyId, {
-      $push: { users: userId },
-    });
-  },
-
   info: async (req: Request, res: Response) => {
     const unit = await UnitDAO.read("645d63cc4d3b287a4fe2dba7");
     const teste = await AssetDAO.getAssetStatusCount([unit!._id!]);
