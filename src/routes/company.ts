@@ -7,10 +7,6 @@ companyRouter.route("/").post(async (req, res) => {
   await companyController.create(req, res);
 });
 
-companyRouter.route("/all").get(async (req, res) => {
-  await companyController.getAll(req, res);
-});
-
 companyRouter.route("/:id").get(async (req, res) => {
   await companyController.getById(req, res);
 });

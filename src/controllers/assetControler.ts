@@ -12,7 +12,6 @@ export const assetControler: Controller<Asset> = {
     return res.status(201).json({ data });
   },
   get: async (req: Request, res: Response) => {
-    // const unitId = req.params.id;
     const assetId = req.params.id;
     const data = await AssetService.read(assetId);
     return res.status(200).json({ data });

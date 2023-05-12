@@ -8,10 +8,6 @@ unitRouter.route("/").post<{}, Unit, Unit>(async (req, res) => {
   await unitController.create(req, res);
 });
 
-unitRouter.route("/").get(async (req, res) => {
-  await unitController.list(req, res);
-});
-
 unitRouter.route("/:id").get(async (req, res) => {
   await unitController.get(req, res);
 });
@@ -24,10 +20,6 @@ unitRouter.route("/:id").delete(async (req, res) => {
   await unitController.delete(req, res);
 });
 
-unitRouter.route("/:id/asset").post(async (req, res) => {
-  await assetControler.create(req, res);
-});
-
-unitRouter.route("/:id/asset/:assetId").get(async (req, res) => {
-  await assetControler.get(req, res);
+unitRouter.route("/").get(async (req, res) => {
+  await unitController.list(req, res);
 });

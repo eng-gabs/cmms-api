@@ -1,4 +1,4 @@
-import { Model, ObjectId } from "mongoose";
+import { Model, ObjectId, Types } from "mongoose";
 import { Asset, AssetModel, AssetStatus } from "../models/asset";
 import { UnitDAO } from "./unitDAO";
 import { NotFoundError } from "../middlewares/error";
@@ -69,12 +69,14 @@ export class AssetDAOSingleton implements IAssetDAO {
     return await asset.populate("unit");
   }
 
-  async deleteAssetsInUnits(unitIds: (string | ObjectId)[]) {
-    return await this.assetModel.deleteMany({ unit: { $in: unitIds } });
+  async deleteAssetsInUnits(unitIds: string[]) {
+    return await this.assetModel.deleteMany({
+      unit: { $in: unitIds },
+    });
   }
 
   getFilterUnitAssetsObject(input: {
-    unitIds: any[];
+    unitIds: (string | ObjectId)[];
     statuses?: AssetStatus[];
     minHealthLevel?: number;
     maxHealthLevel?: number;
@@ -91,7 +93,7 @@ export class AssetDAOSingleton implements IAssetDAO {
   }
 
   async filterUnitAssets(input: {
-    unitIds: any[];
+    unitIds: string[];
     statuses?: AssetStatus[];
     minHealthLevel?: number;
     maxHealthLevel?: number;
@@ -104,7 +106,9 @@ export class AssetDAOSingleton implements IAssetDAO {
   async getAssetStatusCount(unitIds: any[]) {
     const filter = this.getFilterUnitAssetsObject({ unitIds });
     const assetsGrouped = await this.assetModel.aggregate([
-      { $match: filter },
+      {
+        $match: filter,
+      },
       {
         $group: {
           // _id: {
@@ -116,47 +120,31 @@ export class AssetDAOSingleton implements IAssetDAO {
         },
       },
     ]);
-    const assetStatusCount: AssetStatusCount = {
-      Running:
-        assetsGrouped.filter((assetGroup) => assetGroup._id === "Running")[0]
-          ?.count ?? 0,
-      Stopped:
-        assetsGrouped.filter((assetGroup) => assetGroup._id === "Stopped")[0]
-          ?.count ?? 0,
-      Alerting:
-        assetsGrouped.filter((assetGroup) => assetGroup._id === "Alerting")[0]
-          ?.count ?? 0,
-    };
+    return this.mapAssetStatusCount(assetsGrouped);
+  }
 
+  private mapAssetStatusCount(
+    assetsGrouped: { _id: AssetStatus; count: number }[]
+  ) {
+    const assetStatusCount = assetsGrouped
+      .map(({ _id, count }) => {
+        return { [_id]: count };
+      })
+      .reduce((prev, curr) => {
+        return { ...prev, ...curr };
+      });
     return assetStatusCount;
   }
 
   // TODO: improve to a histogram
-  async getAssetsHealthLevelCount(unitIds: any[], maxHealthLevel: number) {
+  async getAssetsWithLowHealthLevels(
+    unitIds: (string | ObjectId)[],
+    maxHealthLevel: number
+  ) {
     const filter = this.getFilterUnitAssetsObject({ unitIds, maxHealthLevel });
-    const assetsGrouped = await this.assetModel.aggregate([
-      { $match: filter },
-      {
-        $group: {
-          _id: "$healthLevel",
-          count: { $sum: 1 },
-        },
-      },
-    ]);
+    const assets = await this.assetModel.find(filter).populate("unit");
+    return assets;
   }
-
-  // async updateAssetsUnit(assetIds: string[], unitId: string) {
-  //   const batchUpdate = await this.assetModel.updateMany(
-  //     {
-  //       _id: { $in: assetIds },
-  //     },
-  //     { unit: unitId }
-  //   );
-  // }
-
-  // private async changeAssetUnit(asset: Document<Asset, {}, Asset>, newUnitId: string) {
-  //   asset.un
-  // }
 }
 
 export const AssetDAO = AssetDAOSingleton.getInstance();

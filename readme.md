@@ -59,9 +59,15 @@ Inside each folder there is a file for each entity of the model.
 - ts-node: enables typescript testing files
 - typescript: project language
 
-## Disclaimers
+## Disclaimers and Future Improvements
 
-## Future Improvements
+### Authentication
+
+- Authentication was not a demand, but implementing should be mandatory in a company production environment. Given the business needs, I think the user should be identified by a authorization token in order to use the API.
+- Since the user is linked to a company, he would be able to read and write Units and Assets only for his company.
+- Company and User creation should always be open to anyone. The sign up flow could be:
+  - Create Company and User with Company Admin (no authentication needed)
+  - Read and Write Units and Assets (company user authentication needed)
 
 ## Thanks
 
@@ -74,8 +80,10 @@ I want to thank Tractian's team for creating this challenge and giving this oppo
 Deletar empresa deve deletar todas as units e assets
 Deletar unit deve deletar todos os assets
 
-[ ] Tipagem dos body das requisições -> melhorar input do body e tipagem do controller (talvez fazer uma classe pro controller)
+[ ] Tipagem dos body das requisições -> melhorar input do body e tipagem do controller (talvez fazer uma classe pro controller) + tipagem do filter da paginação
 [x] Bubble up de erros -> assistir videos no youtube primeiro
+[ ] Documentar todos os endpoints
+[ ] Melhorar endpoint de data aggregation
 
 Router + Controller - Apresentação (API)
 

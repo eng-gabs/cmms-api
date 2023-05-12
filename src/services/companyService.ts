@@ -1,6 +1,8 @@
 import { Company } from "../models/company";
 import { CompanyDAO } from "../db/companyDAO";
 import { AssetDAO } from "../db/assetDAO";
+import { AssetStatus } from "../models/asset";
+import { AssetService } from "./assetService";
 interface ICompanyService {
   companyDAO: typeof CompanyDAO;
 
@@ -45,14 +47,20 @@ class CompanyServiceSingleton implements ICompanyService {
     return company;
   }
 
-  async getCompanyUnitsAssetsSummary(companyId: string) {
+  async getCompanyUnitsAssetsSummary(input: {
+    companyId: string;
+    criticalHealthLevel?: number;
+    unitIds?: string[];
+    // statusFilter?: AssetStatus[];
+  }) {
+    const { companyId, criticalHealthLevel, unitIds } = input;
     const company = await CompanyDAO.read(companyId);
-    const unitIds = company.units;
-
-    const healthLevels = await AssetDAO.getAssetsHealthLevelCount(unitIds, 1);
-    const status = await AssetDAO.getAssetStatusCount(unitIds);
-
-    return { data: status };
+    const units = unitIds ?? company.units;
+    const assetsInfo = await AssetService.getAssetsInfoSummary({
+      criticalHealthLevel,
+      unitIds: units,
+    });
+    return assetsInfo;
   }
 }
 

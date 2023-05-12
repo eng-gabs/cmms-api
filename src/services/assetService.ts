@@ -1,6 +1,7 @@
 import { Asset, AssetStatus } from "../models/asset";
 import { AssetCreateInput, AssetDAO } from "../db/assetDAO";
 import { BadInputError } from "../middlewares/error";
+import { ObjectId } from "mongoose";
 
 interface IAssetService {
   assetDAO: typeof AssetDAO;
@@ -47,6 +48,25 @@ class AssetServiceSingleton implements IAssetService {
     // TODO: intercept auth - owner
     const asset = await this.assetDAO.delete(id);
     return asset;
+  }
+  async getAssetsInfoSummary(input: {
+    unitIds: (string | ObjectId)[];
+    criticalHealthLevel?: number;
+    // statusFilter?: AssetStatus[];
+  }) {
+    const { criticalHealthLevel, unitIds } = input;
+    const maxHealthLevel = criticalHealthLevel
+      ? Number(criticalHealthLevel)
+      : 0.75;
+    this.isValidHealthLevel(maxHealthLevel);
+    const assetsWithLowHealthLevels =
+      await AssetDAO.getAssetsWithLowHealthLevels(unitIds, maxHealthLevel);
+    const statusSummary = await AssetDAO.getAssetStatusCount(unitIds);
+
+    return {
+      statusSummary,
+      assetsWithLowHealthLevels,
+    };
   }
   private isValidHealthLevel(healthLevel: number): void | Error {
     if (healthLevel < 0 || healthLevel > 1) {
