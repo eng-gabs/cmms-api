@@ -1,6 +1,6 @@
 import { Asset, AssetStatus } from "../models/asset";
 import { AssetCreateInput, AssetDAO } from "../db/assetDAO";
-import { BadInputError } from "../utils/error";
+import { BadInputError } from "../middlewares/error";
 
 interface IAssetService {
   assetDAO: typeof AssetDAO;

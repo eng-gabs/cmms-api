@@ -2,7 +2,7 @@ import { Model, ObjectId } from "mongoose";
 import { Unit, UnitModel } from "../models/unit";
 import { CompanyDAO } from "./companyDAO";
 import { AssetDAO } from "./assetDAO";
-import { BadInputError, NotFoundError } from "../utils/error";
+import { BadInputError, NotFoundError } from "../middlewares/error";
 import { UnitCreateInput } from "./types";
 interface IUnitDAO {
   unitModel: Model<Unit>;

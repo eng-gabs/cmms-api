@@ -1,7 +1,7 @@
 import { Model } from "mongoose";
 import { User, UserModel } from "../models/user";
 import { CompanyDAO } from "./companyDAO";
-import { NotFoundError } from "../utils/error";
+import { NotFoundError } from "../middlewares/error";
 
 interface IUserDAO {
   userModel: Model<User>;

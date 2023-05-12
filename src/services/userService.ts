@@ -1,6 +1,6 @@
 import { User } from "../models/user";
 import { UserDAO } from "../db/userDAO";
-import { BadInputError, NotFoundError } from "../utils/error";
+import { BadInputError } from "../middlewares/error";
 interface IUserService {
   userDAO: typeof UserDAO;
 

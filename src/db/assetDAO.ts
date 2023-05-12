@@ -1,7 +1,7 @@
 import { Model, ObjectId } from "mongoose";
 import { Asset, AssetModel, AssetStatus } from "../models/asset";
 import { UnitDAO } from "./unitDAO";
-import { NotFoundError } from "../utils/error";
+import { NotFoundError } from "../middlewares/error";
 
 export type AssetCreateInput = Omit<Asset, "unit"> & { unitId: string };
 
