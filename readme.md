@@ -1,4 +1,4 @@
-# Tractian Backend Challenge API.
+# Tractian Backend Challenge API
 
 The purpose of this API is to fulfill Tractian's challenge demands. More information can be found on []
 
@@ -24,10 +24,36 @@ Also, every endpoint has an integration test written that can be found on src/ro
 
 This project has been organized trying to keep up with Clean Code best practices.
 The src folder holds all project files. Configurations and readme are on root.
-There are 5 main folders: _routes_, _controllers_, _services_, _db_ and _models_. Each one is responsible, respectly for: routes, presentation phase, business logic, data access and models (schema).
+The 6 folders inside src and their responsability are listed below:
+
+- routes: api endpoints
+- controllers: presentation phase
+- services: business logic
+- db: data access layer (db connection and data access objects)
+- models: entity models (mongoose schema)
+- middlewares: contains only the error middleware which is responsible for handling errors globally for the api.
+
 Inside each folder there is a file for each entity of the model.
 
-There is also a _middlewares_ folder that contains only the error middleware which is responsible for handling errors globally for the api.
+## Packages
+
+### Dependencies
+
+- cors: enabling cors config to express
+- dotenv: configuring environment variables
+- express: express server
+- express-async-errors: library to enable async error handling globally with express
+- mongoose: Database (mongoDB) ORM and connection
+
+### Development dependencies
+
+- chai: assertion testing library
+- chai-http: chai plugin to enable http requests testing
+- cross-env: environment selection
+- mocha: testing library
+- nodemon: enables hot-reload when saving project locally
+- ts-node: enables typescript testing files
+- typescript: project language
 
 ## Disclaimers
 
