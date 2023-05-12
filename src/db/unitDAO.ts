@@ -4,11 +4,24 @@ import { CompanyDAO } from "./companyDAO";
 import { AssetDAO } from "./assetDAO";
 import { BadInputError, NotFoundError } from "../middlewares/error";
 import { UnitCreateInput } from "./types";
+import { Pagination } from "./pagination";
+
+interface DBPagination {
+  offset: number;
+  limit: number;
+}
+
+interface Paginated<T> {
+  data: T[];
+  previousUrl: string | null;
+  nextUrl: string | null;
+}
 interface IUnitDAO {
   unitModel: Model<Unit>;
 
   create: (data: UnitCreateInput) => Promise<Unit>;
   read: (id: string) => Promise<Unit>;
+  list: (companyId: string, pagination: Pagination) => Promise<Paginated<Unit>>;
   update: (id: string, data: Partial<Unit>) => Promise<Unit>;
   delete: (id: string) => Promise<Unit>;
 }
@@ -36,6 +49,14 @@ export class UnitDAOSingleton implements IUnitDAO {
       throw new BadInputError("Can not link Assets before creating Unit.");
     }
     return await createdUnit.save();
+  }
+
+  async list(companyId: string, pagination: Pagination) {
+    const model = this.unitModel;
+    const list = await pagination.findItemsWithPagination(model, {
+      company: companyId,
+    });
+    return list;
   }
   async read(id: string | ObjectId) {
     const unitModel = await this.unitModel.findById(id);

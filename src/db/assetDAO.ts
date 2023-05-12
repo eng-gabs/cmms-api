@@ -102,7 +102,6 @@ export class AssetDAOSingleton implements IAssetDAO {
   }
 
   async getAssetStatusCount(unitIds: any[]) {
-    console.log("unitIds", unitIds);
     const filter = this.getFilterUnitAssetsObject({ unitIds });
     const assetsGrouped = await this.assetModel.aggregate([
       { $match: filter },
@@ -128,7 +127,7 @@ export class AssetDAOSingleton implements IAssetDAO {
         assetsGrouped.filter((assetGroup) => assetGroup._id === "Alerting")[0]
           ?.count ?? 0,
     };
-    console.log(assetStatusCount);
+
     return assetStatusCount;
   }
 

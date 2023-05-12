@@ -56,8 +56,6 @@ export const companyController: Controller<Company> = {
       criticalHealth: req.query.criticalHealth,
     };
 
-    console.log("input", input);
-
     const { data } = await CompanyService.getCompanyUnitsAssetsSummary(
       input.companyId
     );

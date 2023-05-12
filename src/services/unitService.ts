@@ -1,6 +1,7 @@
 import { Unit } from "../models/unit";
 import { UnitDAO } from "../db/unitDAO";
 import { UnitCreateInput } from "../db/types";
+import { Pagination } from "../db/pagination";
 interface IUnitService {
   unitDAO: typeof UnitDAO;
 
@@ -32,6 +33,9 @@ class UnitServiceSingleton implements IUnitService {
     // TODO: intercept auth - owner
     const unit = await this.unitDAO.getUnitWithObjects(id);
     return unit;
+  }
+  async list(companyId: string, pagination: Pagination) {
+    return await this.unitDAO.list(companyId, pagination);
   }
   async update(id: string, data: Partial<Unit>) {
     // TODO: intercept auth - owner

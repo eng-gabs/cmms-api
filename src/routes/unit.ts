@@ -8,7 +8,7 @@ unitRouter.route("/").post<{}, Unit, Unit>(async (req, res) => {
   await unitController.create(req, res);
 });
 
-unitRouter.route("/list").get(async (req, res) => {
+unitRouter.route("/").get(async (req, res) => {
   await unitController.list(req, res);
 });
 
