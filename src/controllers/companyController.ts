@@ -1,10 +1,6 @@
-import { Company, CompanyModel } from "../models/company";
+import { Company } from "../models/company";
 import { CompanyService } from "../services/companyService";
-import { AssetDAO } from "../db/assetDAO";
-import { UnitDAO } from "../db/unitDAO";
 import { Controller } from "./controllerBase";
-import { UnitModel } from "../models/unit";
-import { AssetModel } from "../models/asset";
 
 export const companyController: Controller<Company> = {
   create: async (req, res) => {

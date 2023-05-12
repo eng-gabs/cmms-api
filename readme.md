@@ -1,12 +1,12 @@
 # Tractian Backend Challenge API
 
-The purpose of this API is to fulfill Tractian's challenge demands. More information can be found on []
+The purpose of this API is to fulfill Tractian's challenge demands. More information about the company can be found on [this link](tractian.com/)
 
 ## Testing
 
 ### Production:
 
-This project has been deployed for testing purposes on [] and can be tested by anyone.
+This project has been deployed for testing purposes on [this link](https://cmms-api.herokuapp.com/api/) and can be tested by anyone.
 
 ### Postman:
 
@@ -18,9 +18,12 @@ Also, every endpoint has an integration test written that can be found on src/ro
 
 ## API Documentation
 
-The endpoints are well documented using SwaggerUI available on [this link](https://cmms-api.herokuapp.com/docs/).
-
-[ ] Detalhar todos os endpoints
+- The endpoints are documented using SwaggerUI available on [this link](https://cmms-api.herokuapp.com/docs/).
+- Basically there are CRUD endpoints for each entity (User, Company, Unit and Asset).
+- There are two endpoints to list objects with pagination: /unit and /asset
+- There is one data aggregated endpoint /company/{id}/info that returns two informations:
+  - Asset Status Summanry: which contains an object with the asset count for each status (Running, Stopped and Alerting)
+  - Critical Assets: Assets with a health level lower than a given threshold or the default (0.75).
 
 ## How the project is structured
 
@@ -82,8 +85,8 @@ Deletar unit deve deletar todos os assets
 
 [ ] Tipagem dos body das requisições -> melhorar input do body e tipagem do controller (talvez fazer uma classe pro controller) + tipagem do filter da paginação
 [x] Bubble up de erros -> assistir videos no youtube primeiro
-[ ] Documentar todos os endpoints
-[ ] Melhorar endpoint de data aggregation
+[x] Documentar todos os endpoints
+[x] Melhorar endpoint de data aggregation
 
 Router + Controller - Apresentação (API)
 

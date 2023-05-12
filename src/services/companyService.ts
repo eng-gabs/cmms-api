@@ -3,6 +3,7 @@ import { CompanyDAO } from "../db/companyDAO";
 import { AssetDAO } from "../db/assetDAO";
 import { AssetStatus } from "../models/asset";
 import { AssetService } from "./assetService";
+import { BadInputError } from "../middlewares/error";
 interface ICompanyService {
   companyDAO: typeof CompanyDAO;
 
@@ -55,6 +56,14 @@ class CompanyServiceSingleton implements ICompanyService {
   }) {
     const { companyId, criticalHealthLevel, unitIds } = input;
     const company = await CompanyDAO.read(companyId);
+    if (unitIds) {
+      const companyUnitIds = company.units.map((unitId) => unitId.toString());
+      unitIds.forEach((unitId) => {
+        if (!companyUnitIds.includes(unitId)) {
+          throw new BadInputError(`Invalid unit id: ${unitId} for company`);
+        }
+      });
+    }
     const units = unitIds ?? company.units;
     const assetsInfo = await AssetService.getAssetsInfoSummary({
       criticalHealthLevel,

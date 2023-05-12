@@ -144,6 +144,18 @@
             "in": "path",
             "description": "company id",
             "required": true
+          },
+          {
+            "name": "criticalHealth",
+            "in": "query",
+            "description": "health value threshold to return critical assets",
+            "required": false
+          },
+          {
+            "name": "unitIds",
+            "in": "query",
+            "description": "unit ids to filter, otherwise gets all from company",
+            "required": false
           }
         ]
       }
