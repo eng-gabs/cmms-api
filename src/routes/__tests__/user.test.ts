@@ -4,7 +4,16 @@ import { app } from "../..";
 import { connectDB } from "../../db/connection";
 import { UserModel } from "../../models/user";
 import { connection } from "mongoose";
+import { CompanyModel } from "../../models/company";
 chai.use(chaiHttp);
+
+async function createCompanyForTesting() {
+  return await CompanyModel.create({
+    name: "Empresa teste Units",
+    units: [],
+    users: [],
+  });
+}
 
 describe("User Test Suite", () => {
   before(async () => {
@@ -20,10 +29,11 @@ describe("User Test Suite", () => {
     chai.assert.equal(result.text, "Express + TypeScript Server");
   });
   it("Create User: POST /api/user", async () => {
+    const company = await createCompanyForTesting();
     const result = await chai
       .request(app)
       .post("/api/user")
-      .send({ email: "teste@teste.com", name: "Gabs" });
+      .send({ email: "teste@teste.com", name: "Gabs", company: company.id });
     return chai
       .expect(result.body.data)
       .to.contain({ email: "teste@teste.com", name: "Gabs" });

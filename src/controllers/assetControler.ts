@@ -1,9 +1,8 @@
 import { Response, Request } from "express";
 import { Asset, AssetModel, AssetStatus } from "../models/asset";
-import { UnitModel } from "../models/unit";
 import { AssetCreateInput } from "../db/assetDAO";
 import { AssetService } from "../services/assetService";
-import { Controller } from "./userController";
+import { Controller } from "./controllerBase";
 
 export const assetControler: Controller<Asset> = {
   create: async (req: Request, res: Response) => {

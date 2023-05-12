@@ -1,14 +1,7 @@
 import { Request, Response } from "express";
-import { User, UserModel } from "../models/user";
-import { companyController } from "./companyController";
+import { User } from "../models/user";
 import { UserService } from "../services/userService";
-
-export interface Controller<T> {
-  [key: string]: (
-    req: Request,
-    res: Response
-  ) => Promise<Response<T, Record<string, T>> | undefined>;
-}
+import { Controller } from "./controllerBase";
 
 export const userController: Controller<User> = {
   getById: async (req, res) => {
