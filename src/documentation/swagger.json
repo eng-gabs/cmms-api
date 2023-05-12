@@ -1,17 +1,515 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-        "title": "Tractian Challenge",
-        "description": "This API is for Tractian Challenge",
-        "contact": {
-            "email": "gabriel.martins.duarte@alumni.usp.br"
-        },
-        "version": "1.0.0"
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Tractian Challenge",
+    "description": "This API is for Tractian Challenge",
+    "contact": {
+      "email": "gabriel.martins.duarte@alumni.usp.br"
     },
-    "servers": [
-        {
-            "url": "https://cmms-api.herokuapp.com/api/",
-            "description": "Heroku test endpoint"
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://cmms-api.herokuapp.com/api/",
+      "description": "Heroku test endpoint"
+    }
+  ],
+  "paths": {
+    "/user/{id}": {
+      "get": {
+        "summary": "Gets an user by id",
+        "description": "Returns an user object",
+        "tags": ["User"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "user id",
+            "required": true
+          }
+        ]
+      },
+      "patch": {
+        "summary": "Updates an user by id",
+        "description": "Updates user data. All inputs are optional. It is also possible to change user company by passing its id",
+        "tags": ["User"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "user id",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              },
+              "examples": {
+                "user": {
+                  "value": {
+                    "name": "Gabriel Duarte",
+                    "email": "gabriel.martins.duarte@alumni.usp.br",
+                    "company": "12char12char"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "User Created" },
+          "404": { "description": "User or Company not found" }
         }
-    ]
+      },
+      "delete": {
+        "summary": "Delete an user by id",
+        "description": "Deletes the user. Returns the user deleted with a success message.",
+        "tags": ["User"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "user id",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/user": {
+      "post": {
+        "summary": "Creates an user",
+        "description": "Creates a new user and associates it with a company",
+        "tags": ["User"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              },
+              "examples": {
+                "user": {
+                  "value": {
+                    "name": "Gabriel Duarte",
+                    "email": "gabriel.martins.duarte@alumni.usp.br",
+                    "company": "12char12char"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "User Created" },
+          "404": { "description": "Company not found" }
+        }
+      }
+    },
+    "/company": {
+      "post": {
+        "summary": "Creates a company",
+        "description": "Creates a new company. Users are not part of the input",
+        "tags": ["Company"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Company"
+              },
+              "examples": {
+                "company": {
+                  "value": {
+                    "name": "My Company"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Company Created" }
+        }
+      }
+    },
+    "/company/{id}/info": {
+      "get": {
+        "summary": "Gets relevant company information",
+        "description": "Returns a JSON containing an Asset Status Summary (counts how many assets there are with each status) and assets with low health levels considering all units.",
+        "tags": ["Company"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "company id",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/company/{id}": {
+      "get": {
+        "summary": "Gets a company by id",
+        "description": "Returns a company object",
+        "tags": ["Company"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "company id",
+            "required": true
+          }
+        ]
+      },
+      "patch": {
+        "summary": "Updates a company by id",
+        "description": "Updates company data. All inputs are optional. It is not possible to update company units or users. Use unit and user endpoints to do so.",
+        "tags": ["Company"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "company id",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Company"
+              },
+              "examples": {
+                "company": {
+                  "value": {
+                    "name": "My Company"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Company Updated" },
+          "404": { "description": "User or Company not found" },
+          "422": {
+            "description": "Can not update units. Use PATCH /unit/{id} endpoints instead."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a company by id",
+        "description": "Deletes the company, all its units and all unit's assets. Returns the company deleted with a success message. ",
+        "tags": ["Company"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "company id",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/unit/{id}": {
+      "get": {
+        "summary": "Gets a unit by id",
+        "description": "Returns a unit object",
+        "tags": ["Unit"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "unit id",
+            "required": true
+          }
+        ]
+      },
+      "patch": {
+        "summary": "Updates an unit by id",
+        "description": "Updates unit data. All inputs are optional. It is possible to change unit company by passing its id. It is not possible to update assets. Use assets endpoints to do so.",
+        "tags": ["Unit"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "unit id",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Unit"
+              },
+              "examples": {
+                "unit": {
+                  "value": {
+                    "name": "My Unit",
+                    "companyId": "12char12char"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Unit Updated" },
+          "404": { "description": "Unit or Company not found" },
+          "422": {
+            "description": "Can not update units. Use PATCH /unit/{id} endpoints instead."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a unit by id",
+        "description": "Deletes the unit and all its assets. Returns the unit deleted with a success message.",
+        "tags": ["Unit"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "unit id",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/unit": {
+      "post": {
+        "summary": "Creates an unit",
+        "description": "Creates a new unit and associates with a company. Assets are not part of the input",
+        "tags": ["Unit"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Unit"
+              },
+              "examples": {
+                "unit": {
+                  "value": {
+                    "name": "My Unit",
+                    "companyId": "12char12char"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Unit Created" }
+        }
+      },
+      "get": {
+        "summary": "Lists company units",
+        "description": "Receives a companyId to query all units from that company. Also can be paginated using skip and limit.",
+        "tags": ["Unit"],
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "query",
+            "description": "company id",
+            "required": true
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "limit the numbers of objects to be returned. Default is 3",
+            "required": false
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "description": "skip the first objects for pagination. Default is 0 (first page).",
+            "required": false
+          }
+        ]
+      }
+    },
+    "/asset/{id}": {
+      "get": {
+        "summary": "Gets an asset by id",
+        "description": "Returns a asset object",
+        "tags": ["Asset"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "asset id",
+            "required": true
+          }
+        ]
+      },
+      "patch": {
+        "summary": "Updates an asset by id",
+        "description": "Updates asset data. All inputs are optional. It is possible to change asset unit by passing its id.",
+        "tags": ["Asset"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "asset id",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Asset"
+              },
+              "examples": {
+                "asset": {
+                  "value": {
+                    "name": "My Asset",
+                    "unitId": "12char12char",
+                    "description": "Asset Description",
+                    "image": "https://tractian.com/tractian-favicon-ia.png",
+                    "model": "Asset Model",
+                    "owner": "Asset Owner Name",
+                    "status": "Running",
+                    "healthLevel": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Asset Updated" },
+          "404": { "description": "Asset or Unit not found" }
+        }
+      },
+      "delete": {
+        "summary": "Delete an asset by id",
+        "description": "Deletes the asset. Returns the asset deleted with a success message.",
+        "tags": ["Asset"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "asset id",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/asset": {
+      "post": {
+        "summary": "Creates an asset",
+        "description": "Creates a new asset and associates with a unit.",
+        "tags": ["Asset"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Asset"
+              },
+              "examples": {
+                "asset": {
+                  "value": {
+                    "name": "My Asset",
+                    "unitId": "12char12char",
+                    "description": "Asset Description",
+                    "image": "https://tractian.com/tractian-favicon-ia.png",
+                    "model": "Asset Model",
+                    "owner": "Asset Owner Name",
+                    "status": "Running",
+                    "healthLevel": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Asset Created" }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "company": {
+            "type": "object",
+            "$ref": "#/components/schemas/Company"
+          }
+        }
+      },
+      "Company": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            }
+          }
+        }
+      },
+      "Unit": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "company": {
+            "type": "object",
+            "$ref": "#/components/schemas/Company"
+          },
+          "assets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Asset"
+            }
+          }
+        }
+      },
+      "Asset": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "object",
+            "$ref": "#/components/schemas/Unit"
+          },
+          "description": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "healthLevel": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  }
 }
